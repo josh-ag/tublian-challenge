@@ -5,20 +5,19 @@ import {
   Heading,
   HStack,
   Button,
-  Stack,
   VStack,
   FormControl,
   Input,
   Text,
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
-import onboardingImg from "../../assets/onboarding_img1.png";
+import onboardingImg from "../../assets/onboarding_img1.svg";
 import tublianLogo from "../../assets/tublian_logo.svg";
 
 // @Onboarding page1
 export default function () {
   return (
-    <Flex w={"full"} h={"100vh"}>
+    <Flex w={"full"} minH={"100vh"} h="full">
       {/*@onboarding1 image container */}
       <Box flex={1} h={"100%"}>
         <Image
@@ -44,7 +43,13 @@ export default function () {
           alignItems={"flex-start"}
         >
           {/* @Onboarding1 header  */}
-          <Stack direction={"column"} alignItems={"flex-start"} spacing={6}>
+          <HStack
+            w="full"
+            alignItems={"flex-start"}
+            justifyContent={"space-between"}
+            spacing={6}
+            flexWrap={"wrap"}
+          >
             {/* content heading  */}
             <HStack cursor={"pointer"}>
               <Image
@@ -156,9 +161,9 @@ export default function () {
                 4:Payment
               </Button>
             </HStack>
-          </Stack>
+          </HStack>
 
-          <FormControl w={"50%"}>
+          <FormControl w={{ base: "full", lg: "70%", xl: "50%" }}>
             <VStack
               spacing={8}
               justifyContent={"flex-start"}
@@ -203,7 +208,7 @@ export default function () {
               >
                 Proceed
               </Button>
-              <HStack>
+              <HStack flexWrap={"wrap"}>
                 <Text fontSize={16} fontWeight={400}>
                   Dont have account?
                 </Text>

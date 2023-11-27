@@ -11,8 +11,10 @@ import {
   CardHeader,
   Text,
   CardBody,
-  IconButton,
-  Avatar,
+  chakra,
+  useRadioGroup,
+  useRadio,
+  useToast,
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import tublianLogo from "../../assets/tublian_logo.svg";
@@ -20,14 +22,145 @@ import tickCircle from "../../assets/tick-circle.svg";
 import teamProjectImage from "../../assets/team_project_card1.svg";
 import personalProjectImage from "../../assets/personalProjectImage.svg";
 import recruitingImage from "../../assets/recruitingImage.svg";
+import { RadioType } from "../../type";
+
+function CardGroup() {
+  const toast = useToast();
+
+  const cards: RadioType[] = [
+    {
+      name: "team",
+      tick: tickCircle,
+      image: teamProjectImage,
+      heading: "Team Projects",
+      text: "Hire developer for team projects",
+    },
+    {
+      name: "personal",
+      tick: tickCircle,
+      image: personalProjectImage,
+      heading: "Personal Project",
+      text: "Hire developer for personal projects",
+    },
+
+    {
+      name: "recruiting",
+      tick: tickCircle,
+      heading: "Recruiting",
+      image: recruitingImage,
+      text: "Recruit developer for outstanding companies",
+    },
+  ];
+
+  const handleChange = (value: string) => {
+    toast({
+      title: `The value got changed to ${value}!`,
+      status: "success",
+      duration: 2000,
+    });
+  };
+
+  const { getRadioProps, getRootProps } = useRadioGroup({
+    defaultValue: "team",
+    onChange: handleChange,
+  });
+
+  function CustomRadio(props: any) {
+    const { card, ...radioProps } = props;
+    const { state, getInputProps, getRadioProps, htmlProps, getLabelProps } =
+      useRadio(radioProps);
+
+    return (
+      <chakra.label
+        {...htmlProps}
+        rounded={20}
+        sx={{ padding: 0.5 }}
+        boxShadow={"md"}
+        w="sm"
+        bg={"#292929"}
+        bgGradient={state.isChecked ? "linear(to-r,#FBDA61,#FF5ACD 84%)" : ""}
+        // _hover={{
+        //   bgGradient: "linear(to-r,#FBDA61,#FF5ACD 84%)",
+        // }}
+      >
+        <input {...getInputProps({})} hidden />
+        <Card
+          {...getRadioProps()}
+          w="full"
+          h="full"
+          bgColor={"gray.800"}
+          rounded={20}
+        >
+          <CardHeader display="flex" justifyContent={"flex-end"}>
+            <Flex
+              {...getRadioProps()}
+              w={6}
+              h={6}
+              rounded="full"
+              sx={{ border: `1px solid #292929` }}
+            >
+              {state.isChecked ? (
+                <Image
+                  src={card.tick}
+                  objectFit={"cover"}
+                  rounded="full"
+                  {...getLabelProps()}
+                />
+              ) : null}
+            </Flex>
+          </CardHeader>
+
+          <CardBody>
+            <VStack spacing={4}>
+              <Image
+                src={card.image}
+                objectFit={"cover"}
+                alignSelf={"center"}
+              />
+              <Heading fontSize={20} fontWeight={700} color="#FCFCFC">
+                {card?.heading}
+              </Heading>
+              <Text
+                fontSize={16}
+                fontWeight={500}
+                textOverflow={"wrap"}
+                textAlign={"center"}
+              >
+                {card.text}
+              </Text>
+            </VStack>
+          </CardBody>
+        </Card>
+      </chakra.label>
+    );
+  }
+
+  return (
+    <Stack {...getRootProps()}>
+      <HStack spacing={6}>
+        {cards.map((card) => {
+          return (
+            <CustomRadio
+              key={card.name}
+              card={card}
+              image={card.tick}
+              {...getRadioProps({ value: card.name })}
+            />
+          );
+        })}
+      </HStack>
+    </Stack>
+  );
+}
 
 // @Onboarding page3
-export default function SetUpPage() {
+function SetUpPage() {
   return (
     <Flex
       w={"full"}
       direction={"column"}
-      h={"100vh"}
+      minH={"100vh"}
+      h="full"
       p={10}
       alignItems={"center"}
       justify={"space-between"}
@@ -41,7 +174,7 @@ export default function SetUpPage() {
         justify={"space-between"}
       >
         {/* content heading  */}
-        <HStack>
+        <HStack cursor={"pointer"}>
           <Image
             src={tublianLogo}
             objectFit={"contain"}
@@ -139,7 +272,7 @@ export default function SetUpPage() {
         alignItems={"center"}
       >
         <VStack spacing={4}>
-          <Heading fontWeight={700} fontSize={24} textAlign={"center"}>
+          <Heading fontWeight={700} fontSize={36} textAlign={"center"}>
             How are you planning to use Tublian?
           </Heading>
           <Text fontSize={16} fontWeight={500} color={"#CFCFCF"}>
@@ -148,135 +281,7 @@ export default function SetUpPage() {
         </VStack>
 
         <Box>
-          <HStack spacing={10}>
-            <Card
-              as={Link}
-              shadow={"lg"}
-              rounded={20}
-              sx={{ padding: 0.5 }}
-              boxShadow={"md"}
-              w="sm"
-              bgGradient="linear(to-r,#FBDA61,#FF5ACD 84%)"
-            >
-              <Box w="full" h="full" bgColor={"gray.800"} rounded={20}>
-                <CardHeader display="flex" justifyContent={"flex-end"}>
-                  <IconButton
-                    size={"sm"}
-                    rounded={20}
-                    colorScheme="darkAlpha"
-                    aria-label="checked mark"
-                    icon={
-                      <Avatar
-                        src={tickCircle}
-                        size={"xs"}
-                        objectFit={"contain"}
-                      />
-                    }
-                  />
-                </CardHeader>
-
-                <CardBody>
-                  <VStack spacing={4}>
-                    <Image
-                      src={teamProjectImage}
-                      objectFit={"cover"}
-                      alignSelf={"center"}
-                    />
-                    <Heading fontSize={20} fontWeight={700} color="#FCFCFC">
-                      Team Projects
-                    </Heading>
-                    <Text fontSize={16} fontWeight={500} textOverflow={"wrap"}>
-                      Hire developers for team projects.
-                    </Text>
-                  </VStack>
-                </CardBody>
-              </Box>
-            </Card>
-
-            <Card
-              shadow={"md"}
-              rounded={20}
-              sx={{ padding: 0.5, transition: "all 500ms linear" }}
-              w="sm"
-              _hover={{ bgGradient: "linear(to-r,#FBDA61,#FF5ACD 84%)" }}
-            >
-              <Box w="full" h="full" bgColor={"gray.800"} rounded={20}>
-                <CardHeader display="flex" justifyContent={"flex-end"}>
-                  <IconButton
-                    size={"sm"}
-                    rounded={20}
-                    colorScheme="darkAlpha"
-                    aria-label="checked mark"
-                    icon={
-                      <Avatar
-                        src={tickCircle}
-                        size={"xs"}
-                        objectFit={"contain"}
-                      />
-                    }
-                  />
-                </CardHeader>
-
-                <CardBody>
-                  <VStack spacing={4}>
-                    <Image
-                      src={personalProjectImage}
-                      objectFit={"cover"}
-                      alignSelf={"center"}
-                    />
-                    <Heading fontSize={20} fontWeight={700} color="#FCFCFC">
-                      Personal Project
-                    </Heading>
-                    <Text fontSize={16} fontWeight={500} textOverflow={"wrap"}>
-                      Hire developers for team projects.
-                    </Text>
-                  </VStack>
-                </CardBody>
-              </Box>
-            </Card>
-
-            <Card
-              shadow={"md"}
-              rounded={20}
-              sx={{ padding: 0.5 }}
-              w="sm"
-              _hover={{ bgGradient: "linear(to-r,#FBDA61,#FF5ACD 84%)" }}
-            >
-              <Box w="full" h="full" bgColor={"gray.800"} rounded={20}>
-                <CardHeader display="flex" justifyContent={"flex-end"}>
-                  <IconButton
-                    size={"sm"}
-                    rounded={20}
-                    colorScheme="darkAlpha"
-                    aria-label="checked mark"
-                    icon={
-                      <Avatar
-                        src={tickCircle}
-                        size={"xs"}
-                        objectFit={"contain"}
-                      />
-                    }
-                  />
-                </CardHeader>
-
-                <CardBody>
-                  <VStack spacing={4}>
-                    <Image
-                      src={recruitingImage}
-                      objectFit={"cover"}
-                      alignSelf={"center"}
-                    />
-                    <Heading fontSize={20} fontWeight={700} color="#FCFCFC">
-                      Personal Project
-                    </Heading>
-                    <Text fontSize={16} fontWeight={500} textOverflow={"wrap"}>
-                      Hire developers for team projects.
-                    </Text>
-                  </VStack>
-                </CardBody>
-              </Box>
-            </Card>
-          </HStack>
+          <CardGroup />
         </Box>
 
         <Button
@@ -310,3 +315,5 @@ export default function SetUpPage() {
     </Flex>
   );
 }
+
+export default SetUpPage;

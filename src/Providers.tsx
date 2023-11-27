@@ -38,7 +38,7 @@ const colors = {
   },
 };
 
-const theme = extendTheme({ config, colors, fonts, breakpoints });
+export const theme = extendTheme({ config, colors, fonts, breakpoints });
 
 export const ThemeProvider = ({ children }: any) => (
   <ChakraProvider theme={theme}>{children}</ChakraProvider>

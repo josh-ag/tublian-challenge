@@ -15,16 +15,24 @@ import {
   Divider,
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
-import onboardingImg2 from "../../assets/onboarding_img2.png";
+import onboardingImg2 from "../../assets/onboarding_img2.svg";
 import tublianLogo from "../../assets/tublian_logo.svg";
 import logoGoogle from "../../assets/icon_google.svg";
 
 // @Onboarding page2
 export default function CreateAccountPage() {
   return (
-    <Flex w={"full"} h={"100vh"}>
+    <Flex w={"full"} minH={"100vh"} h={"full"} pos={"relative"}>
       {/*@onboarding2 image container */}
-      <Box flex={1} h={"100%"} bgGradient={"linear(to-b, #FDD649,#BCC83D)"}>
+      <Box
+        // pos={"absolute"}
+        flex={1}
+        // w={"50%"}
+        // maxW={"50%"}
+        h={"100vh"}
+        minH={"100vh"}
+        bgGradient={"linear(to-b, #FDD649,#BCC83D)"}
+      >
         <Image
           src={onboardingImg2}
           alt="onboarding illustrator"
@@ -36,6 +44,7 @@ export default function CreateAccountPage() {
 
       {/*@onboarding2 content container */}
       <Box
+        // pos={"relative"}
         flex={1}
         p={12}
         display={"flex"}
@@ -43,14 +52,21 @@ export default function CreateAccountPage() {
         justifyContent={"space-between"}
       >
         <VStack
-          spacing={20}
+          spacing={16}
           justifyContent={"flex-start"}
           alignItems={"flex-start"}
+          h="auto"
         >
           {/* @Onboarding2 header  */}
-          <Stack direction={"column"} alignItems={"flex-start"} spacing={6}>
+          <HStack
+            w="full"
+            alignItems={"flex-start"}
+            justifyContent={"space-between"}
+            spacing={6}
+            flexWrap={"wrap"}
+          >
             {/* content heading  */}
-            <HStack cursor={"pointer"}>
+            <HStack cursor={"pointer"} w="auto">
               <Image
                 src={tublianLogo}
                 objectFit={"contain"}
@@ -142,9 +158,9 @@ export default function CreateAccountPage() {
                 4:Payment
               </Button>
             </HStack>
-          </Stack>
+          </HStack>
 
-          <FormControl w={"50%"}>
+          <FormControl w={{ base: "full", lg: "70%", xl: "50%" }}>
             <VStack
               spacing={8}
               justifyContent={"flex-start"}

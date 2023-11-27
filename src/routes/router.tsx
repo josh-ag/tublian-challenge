@@ -8,20 +8,19 @@ import PaymentPage from "../pages/onboarding/payment";
 export const Router = createBrowserRouter([
   {
     path: "/",
-
     errorElement: <ErrorComponent />,
     children: [
       { element: <Onboarding />, index: true },
       {
-        path: "/account/create",
+        path: "account/create",
         element: <CreateAccountPage />,
       },
       {
-        path: "/setup",
+        path: "setup",
         element: <SetUpPage />,
       },
       {
-        path: "/payment",
+        path: "payment",
         element: <PaymentPage />,
       },
     ],
