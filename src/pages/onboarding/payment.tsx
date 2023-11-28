@@ -28,17 +28,35 @@ import {
   ModalBody,
   ModalFooter,
   useDisclosure,
-  ModalHeader,
-  ModalCloseButton,
   ModalOverlay,
+  TabPanel,
+  TabPanels,
+  Divider,
+  FormControl,
+  Input,
+  InputGroup,
+  InputLeftElement,
+  InputRightElement,
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import tublianLogo from "../../assets/tublian_logo.svg";
-import { PaymentType } from "../../type";
+import { ButtonType, PaymentType } from "../../type";
+import { IoIosArrowDown } from "react-icons/io";
 import { CheckCircleIcon } from "@chakra-ui/icons";
 import closeBtn from "../../assets/close_button.svg";
+import cardLogo from "../../assets/card.svg";
+import tickCircle from "../../assets/tick-circle.svg";
+import googlePay from "../../assets/google_pay.svg";
+import lockIcon from "../../assets/lock.svg";
+import logoVisa from "../../assets/logo_visa.svg";
+import logoMaster from "../../assets/logo_master.svg";
+import logoAmex from "../../assets/logo_amex.svg";
+import logoStripe from "../../assets/logo_stripe.svg";
+import bgConfetti from "../../assets/confetti.svg";
+import checkMark from "../../assets/check_mark.svg";
 
-function CardGroup({ modalOpen }) {
+//@create checkable card group
+function CardGroup({ modalOpen }: any) {
   const toast = useToast();
 
   const cards: PaymentType[] = [
@@ -89,6 +107,7 @@ function CardGroup({ modalOpen }) {
     onChange: handleChange,
   });
 
+  //@create a custom radio button
   function CustomRadio(props: any) {
     const { card, ...radioProps } = props;
     const { state, getInputProps, getRadioProps, htmlProps, getLabelProps } =
@@ -133,10 +152,10 @@ function CardGroup({ modalOpen }) {
           <CardHeader display="flex" justifyContent={"flex-start"}>
             <VStack justify={"flex-start"} align={"flex-start"} spacing={4}>
               <Box
+                as={Button}
                 w={card.type === "Pro" ? 69 : 160}
                 h={29}
                 variant={"unstyled"}
-                as={Button}
                 borderRadius={10}
                 bgGradient={bgGradient}
                 sx={{ border: `1px solid ${borderColor}` }}
@@ -171,7 +190,7 @@ function CardGroup({ modalOpen }) {
                         fontSize={"lg"}
                         as={CheckCircleIcon}
                         color={"#76F368"}
-                      />{" "}
+                      />
                       <Text fontSize={14} fontWeight={500} color={"#FEFEFE"}>
                         {text}
                       </Text>
@@ -230,7 +249,442 @@ function CardGroup({ modalOpen }) {
   );
 }
 
-// @Onboarding page3
+//@Create a button group that act like radio
+function ButtonGroup({ modalOpen }: { modalOpen: () => void }) {
+  const toast = useToast();
+
+  const buttons: ButtonType[] = [
+    {
+      name: "Card",
+      tick: tickCircle,
+      text: "Card Payment",
+      image: cardLogo,
+    },
+    {
+      name: "Google",
+      tick: tickCircle,
+      image: googlePay,
+    },
+  ];
+
+  const handleChange = (value: any) => {
+    toast({
+      title: `The value got changed to ${value}!`,
+      status: "success",
+      duration: 2000,
+    });
+  };
+
+  const { getRadioProps, getRootProps } = useRadioGroup({
+    defaultValue: "Card",
+    onChange: handleChange,
+  });
+
+  //@create a custom radio button
+  function CustomRadio(props: any) {
+    const { card, ...radioProps } = props;
+    const { state, getInputProps, getRadioProps, htmlProps, getLabelProps } =
+      useRadio(radioProps);
+
+    return (
+      <chakra.label
+        {...htmlProps}
+        sx={{ padding: 0.5 }}
+        w="full"
+        bg={"#292929"}
+        borderRadius={10}
+        bgGradient={state.isChecked ? "linear(to-r,#FBDA61,#FF5ACD 84%)" : ""}
+        h={"60px"}
+      >
+        <input {...getInputProps({})} hidden />
+        <Box w="full" h={"full"} borderRadius={10}>
+          <HStack
+            spacing={6}
+            borderRadius={10}
+            justify={"flex-start"}
+            w="full"
+            h="full"
+            bg={"#292929"}
+            pl={6}
+          >
+            <Flex
+              {...getRadioProps()}
+              w={6}
+              h={6}
+              rounded="full"
+              bg={"#292929"}
+              sx={{ border: `1px solid #414141` }}
+            >
+              {state.isChecked && <Image src={card.tick} objectFit={"cover"} />}
+            </Flex>
+            <Image src={card.image} objectFit={"cover"} />
+            <Text fontSize={20} fontWeight={700} color={"#FEFEFE"}>
+              {card?.text}
+            </Text>
+          </HStack>
+        </Box>
+      </chakra.label>
+    );
+  }
+
+  return (
+    <VStack spacing={2} {...getRootProps()}>
+      {buttons.map((btn) => {
+        return (
+          <CustomRadio
+            key={btn.name}
+            card={btn}
+            image={btn.name}
+            {...getRadioProps({ value: btn.name })}
+          />
+        );
+      })}
+    </VStack>
+  );
+}
+
+//Modal Component
+export const ModalComponent = ({
+  isModalOpen,
+  onModalClose,
+  onModalOpen,
+}: {
+  isModalOpen: boolean;
+  onModalOpen: () => void;
+  onModalClose: () => void;
+}) => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const handlePayment = () => {
+    onModalClose();
+
+    onOpen();
+  };
+
+  return (
+    <>
+      <Modal isCentered isOpen={isModalOpen} onClose={onModalClose}>
+        <ModalOverlay bg="blackAlpha.500" backdropFilter="blur(50px)" />
+        <ModalContent
+          w={580}
+          // py={8}
+          borderRadius={20}
+          bg={"#1E1E1E"}
+          shadow={"none"}
+        >
+          <HStack p={4} align={"center"} justify={"space-between"} w={"full"}>
+            <HStack cursor={"pointer"}>
+              <Image
+                src={tublianLogo}
+                objectFit={"contain"}
+                boxSize={"fit-content"}
+              />
+              <Heading fontFamily={"Recepts"} fontWeight={"400"} fontSize={13}>
+                TUBLIAN
+              </Heading>
+            </HStack>
+
+            <Box as={Button} onClick={onModalClose} variant={"unstyled"}>
+              <Image src={closeBtn} objectFit={"cover"} />
+            </Box>
+          </HStack>
+
+          <ModalBody>
+            <VStack
+              spacing={8}
+              w="full"
+              h="auto"
+              justify={"flex-start"}
+              align={"flex-start"}
+            >
+              <Card
+                variant={"outline"}
+                bg={"#292929"}
+                outline={"#414141"}
+                w="full"
+              >
+                <CardHeader>
+                  <HStack justify={"space-between"}>
+                    <Heading fontSize={20} fontWeight={700}>
+                      Monthly Plan
+                    </Heading>
+                    <Button
+                      onClick={onModalClose}
+                      variant="unstyled"
+                      display={"flex"}
+                      alignItems={"center"}
+                      justifyContent={"center"}
+                    >
+                      <Text fontSize={16} fontWeight={500} color={"brand.900"}>
+                        Change plan
+                      </Text>
+                    </Button>
+                  </HStack>
+                </CardHeader>
+                <Divider />
+                <CardBody>
+                  <Stack
+                    direction={"column"}
+                    spacing={6}
+                    justify={"flex-start"}
+                  >
+                    <Box
+                      as={Button}
+                      // w={card.type === "Pro" ? 69 : 160}
+                      w={169}
+                      h={29}
+                      variant={"unstyled"}
+                      borderRadius={10}
+                      bgGradient={"linear(to-b,#0881FF,#0B4F95)"}
+                      sx={{ border: `1px solid #79BBFF` }}
+                    >
+                      <Text fontSize={18} fontWeight={700} color={"#FEFEFE"}>
+                        Business Plan
+                      </Text>
+                    </Box>
+
+                    <HStack justify={"space-between"}>
+                      <Text fontSize={18} fontWeight={500} color={"#FEFEFE"}>
+                        Total
+                      </Text>
+                      <Heading fontSize={18} fontWeight={500} color={"#B7B7B7"}>
+                        <Highlight
+                          query={"$49.99"}
+                          styles={{
+                            fontSize: 30,
+                            fontWeight: 700,
+                            color: "#FEFEFE",
+                          }}
+                        >
+                          usd $49.99/Month
+                        </Highlight>
+                      </Heading>
+                    </HStack>
+                  </Stack>
+                </CardBody>
+              </Card>
+
+              <Stack w="full" direction={"column"} spacing={4}>
+                <>
+                  <Heading fontSize={20} fontWeight={700}>
+                    Payment method
+                  </Heading>
+                  <Text fontSize={16} fontWeight={500} color={"#B7B7B7"}>
+                    Choose how you'd like to pay
+                  </Text>
+                </>
+
+                <ButtonGroup modalOpen={onModalOpen} />
+              </Stack>
+
+              <FormControl w={"full"}>
+                <VStack
+                  spacing={6}
+                  w={"full"}
+                  justify={"flex-start"}
+                  alignItems={"flex-start"}
+                >
+                  <Heading fontSize={20} fontWeight={700}>
+                    Payment Details
+                  </Heading>
+                  <Input
+                    type="email"
+                    placeholder="Email"
+                    variant={"flushed"}
+                    fontSize={16}
+                    fontWeight={500}
+                    color={"#888888"}
+                    p={4}
+                    _focus={{ color: "#CFCFCF" }}
+                    focusBorderColor="#CFCFCF"
+                    borderColor={"#888888"}
+                  />
+                  <Input
+                    type="holder"
+                    placeholder="Card Holder"
+                    variant={"flushed"}
+                    fontSize={16}
+                    fontWeight={500}
+                    p={4}
+                    color={"#888888"}
+                    _focus={{ color: "#CFCFCF" }}
+                    focusBorderColor="#CFCFCF"
+                    borderColor={"#888888"}
+                  />
+                  <InputGroup>
+                    <InputLeftElement pointerEvents="none">
+                      <Image src={lockIcon} objectFit={"cover"} />
+                    </InputLeftElement>
+                    <Input
+                      type="holder"
+                      placeholder="Card Number"
+                      variant={"flushed"}
+                      fontSize={16}
+                      fontWeight={500}
+                      py={4}
+                      px={12}
+                      color={"#888888"}
+                      _focus={{ color: "#CFCFCF" }}
+                      focusBorderColor="#CFCFCF"
+                      borderColor={"#888888"}
+                    />
+                    <InputRightElement>
+                      <HStack align={"center"}>
+                        <Image src={logoVisa} objectFit={"cover"} />
+                        <Image src={logoMaster} objectFit={"cover"} />
+                        <Image src={logoAmex} objectFit={"cover"} />
+                      </HStack>
+                    </InputRightElement>
+                  </InputGroup>
+                  <HStack>
+                    <Input
+                      type="mm/yy"
+                      placeholder="MM/YY"
+                      variant={"flushed"}
+                      fontSize={16}
+                      fontWeight={500}
+                      py={4}
+                      color={"#888888"}
+                      _focus={{ color: "#CFCFCF" }}
+                      focusBorderColor="#CFCFCF"
+                      borderColor={"#888888"}
+                    />
+                    <Input
+                      type="cvv"
+                      placeholder="CVV"
+                      variant={"flushed"}
+                      fontSize={16}
+                      fontWeight={500}
+                      py={4}
+                      color={"#888888"}
+                      _focus={{ color: "#CFCFCF" }}
+                      focusBorderColor="#CFCFCF"
+                      borderColor={"#888888"}
+                    />
+                  </HStack>
+
+                  <InputGroup>
+                    <Input
+                      type="cvv"
+                      placeholder="Country"
+                      variant={"flushed"}
+                      fontSize={16}
+                      fontWeight={500}
+                      py={4}
+                      color={"#888888"}
+                      _focus={{ color: "#CFCFCF" }}
+                      focusBorderColor="#CFCFCF"
+                      borderColor={"#888888"}
+                    />
+                    <InputRightElement>
+                      <IoIosArrowDown />
+                    </InputRightElement>
+                  </InputGroup>
+
+                  <Text fontSize={16} fontWeight={500}>
+                    By clicking below, you agree to our{" "}
+                    <chakra.label color={"#91C3FD"}>Terms</chakra.label>,
+                    <chakra.label color={"#91C3FD"}>
+                      Privacy Policy
+                    </chakra.label>{" "}
+                    and{" "}
+                    <chakra.label color={"brand.800"}>
+                      Automatic Renewal
+                    </chakra.label>
+                    . Tublian will charge you $49.99 (plus Tax) each month until
+                    you cancel you subscription in account settings.
+                  </Text>
+                </VStack>
+              </FormControl>
+
+              <Button
+                //@Submit button
+                variant={"unstyled"}
+                w="100%"
+                bgColor="brand.800"
+                color={"gray.700"}
+                rounded={30}
+                fontWeight={500}
+                size="lg"
+                onClick={handlePayment}
+              >
+                Pay $49.99
+              </Button>
+            </VStack>
+          </ModalBody>
+          <ModalFooter justifyContent={"flex-start"}>
+            <HStack spacing={6}>
+              <Image src={logoStripe} objectFit={"cover"} />
+              <Text fontSize={16} fontWeight={500}>
+                Powered by Stripe.com
+              </Text>
+            </HStack>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+      <Modal isCentered onClose={onClose} isOpen={isOpen}>
+        <ModalOverlay bg="blackAlpha.500" backdropFilter="blur(50px)" />
+        <ModalContent
+          w={580}
+          h={491}
+          // py={8}
+          borderRadius={20}
+          bg={"#1E1E1E"}
+          shadow={"none"}
+        >
+          <Flex
+            h={314}
+            w="full"
+            p={4}
+            backgroundImage={bgConfetti}
+            // justify={"center"}
+            align={"center"}
+          >
+            <HStack cursor={"pointer"} alignSelf={"flex-start"}>
+              <Image
+                src={tublianLogo}
+                objectFit={"contain"}
+                boxSize={"fit-content"}
+              />
+              <Heading fontFamily={"Recepts"} fontWeight={"400"} fontSize={13}>
+                TUBLIAN
+              </Heading>
+            </HStack>
+
+            <Image src={checkMark} objectFit={"cover"} />
+          </Flex>
+          <VStack spacing={6}>
+            <Heading fontSize={30} fontWeight={700}>
+              Payment Successful
+            </Heading>
+            <Text fontSize={16} fontWeight={500} color={"#CFCFCF"}>
+              Your payment went through successfully.
+            </Text>
+
+            <Box
+              as={Button}
+              variant={"unstyled"}
+              w={"full"}
+              bgColor="brand.800"
+              rounded={30}
+              fontWeight={500}
+              fontSize={16}
+              display={"flex"}
+              alignItems={"center"}
+              justifyContent={"center"}
+              color={"gray.800"}
+              onClick={onClose}
+            >
+              Proceed
+            </Box>
+          </VStack>
+        </ModalContent>
+      </Modal>
+    </>
+  );
+};
+
+// @PAYMENT PAGE
 export default function PaymentPage() {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -359,58 +813,70 @@ export default function PaymentPage() {
 
           <Tabs
             variant="outline"
-            colorScheme="green"
-            bgColor={"#292929"}
-            maxW={"lg"}
-            w="lg"
+            bgColor={"gray.800"}
+            w={"auto"}
             h={"auto"}
-            sx={{ border: "1px solid #292929", padding: 0.4 }}
             rounded={20}
             size={"md"}
             isFitted={true}
           >
-            <TabList bgColor={"#1E1E1E"} rounded={20} p={1}>
-              <Tab
-                _selected={{
-                  borderRadius: 16,
-                  bgGradient: "linear(to-r, #FBDA61,#FF5ACD 84%)",
-                }}
-                fontSize={20}
-                fontWeight={700}
+            <VStack mb={6}>
+              <TabList
+                bgColor={"#1E1E1E"}
+                sx={{ border: "1px solid #292929", padding: 0.4 }}
+                rounded={20}
+                p={1}
+                w={"50%"}
+                alignSelf={"center"}
               >
-                Monthly
-              </Tab>
-              <Tab
-                _selected={{
-                  borderRadius: 16,
-                  bgGradient: "linear(to-r, #FBDA61,#FF5ACD 84%)",
-                }}
-              >
-                <HStack>
-                  <Text fontSize={20} fontWeight={700}>
-                    Annually
-                  </Text>
-                  <Button
-                    variant={"unstyled"}
-                    bgColor={"rgba(68, 87, 66, 0.52)"}
-                    fontSize={12}
-                    fontWeight={700}
-                    display="flex"
-                    alignItems={"center"}
-                    justifyContent={"center"}
-                    color="#76F368"
-                    sx={{ width: 100, height: 10, borderRadius: 33 }}
-                  >
-                    20% Off
-                  </Button>
-                </HStack>
-              </Tab>
-            </TabList>
+                <Tab
+                  w="full"
+                  _selected={{
+                    borderRadius: 16,
+                    bgGradient: "linear(to-r, #FBDA61,#FF5ACD 84%)",
+                  }}
+                  fontSize={20}
+                  fontWeight={700}
+                >
+                  Monthly
+                </Tab>
+                <Tab
+                  w="full"
+                  _selected={{
+                    borderRadius: 16,
+                    bgGradient: "linear(to-r, #FBDA61,#FF5ACD 84%)",
+                  }}
+                >
+                  <HStack>
+                    <Text fontSize={20} fontWeight={700}>
+                      Annually
+                    </Text>
+                    <Button
+                      variant={"unstyled"}
+                      bgColor={"rgba(68, 87, 66, 0.52)"}
+                      fontSize={12}
+                      fontWeight={700}
+                      display="flex"
+                      alignItems={"center"}
+                      justifyContent={"center"}
+                      color="#76F368"
+                      sx={{ width: 100, height: 10, borderRadius: 33 }}
+                    >
+                      20% Off
+                    </Button>
+                  </HStack>
+                </Tab>
+              </TabList>
+            </VStack>
+            <TabPanels w="full" bg={"gray.800"}>
+              <TabPanel>
+                <CardGroup modalOpen={onOpen} />
+              </TabPanel>
+              <TabPanel>
+                <CardGroup modalOpen={onOpen} />
+              </TabPanel>
+            </TabPanels>
           </Tabs>
-
-          <Box>
-            <CardGroup modalOpen={onOpen} />
-          </Box>
         </VStack>
 
         {/* @footer */}
@@ -423,47 +889,12 @@ export default function PaymentPage() {
           </Button>
         </HStack>
       </Flex>
-
-      <Modal isCentered isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay bg="blackAlpha.500" backdropFilter="blur(50px)" />
-        <ModalContent
-          w={580}
-          // minH={800}
-          h={"full"}
-          borderRadius={20}
-          bgGradient={"linear(to-b,#292929,#1E1E1E)"}
-        >
-          <HStack p={4} align={"center"} justify={"space-between"} w={"full"}>
-            <HStack cursor={"pointer"}>
-              <Image
-                src={tublianLogo}
-                objectFit={"contain"}
-                boxSize={"fit-content"}
-              />
-              <Heading
-                fontFamily={"Recepts"}
-                fontWeight={"400"}
-                fontSize={13}
-                // lineHeight={18.3}
-                // noOfLines={1}
-              >
-                TUBLIAN
-              </Heading>
-            </HStack>
-
-            <Box as={Button} onClick={onClose} variant={"unstyled"}>
-              <Image src={closeBtn} objectFit={"cover"} />
-            </Box>
-          </HStack>
-
-          <ModalBody>
-            <Text>Make your payment!</Text>
-          </ModalBody>
-          <ModalFooter>
-            {/* <Button onClick={onClose}>Close</Button> */}
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+      {/* @Payment Modal */}
+      <ModalComponent
+        isModalOpen={isOpen}
+        onModalClose={onClose}
+        onModalOpen={onOpen}
+      />
     </>
   );
 }
