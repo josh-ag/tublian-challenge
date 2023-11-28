@@ -110,7 +110,7 @@ function CardGroup({ modalOpen }: any) {
   //@create a custom radio button
   function CustomRadio(props: any) {
     const { card, ...radioProps } = props;
-    const { state, getInputProps, getRadioProps, htmlProps, getLabelProps } =
+    const { state, getInputProps, getRadioProps, htmlProps } =
       useRadio(radioProps);
 
     const bgGradient =
@@ -250,7 +250,7 @@ function CardGroup({ modalOpen }: any) {
 }
 
 //@Create a button group that act like radio
-function ButtonGroup({ modalOpen }: { modalOpen: () => void }) {
+function ButtonGroup() {
   const toast = useToast();
 
   const buttons: ButtonType[] = [
@@ -283,7 +283,7 @@ function ButtonGroup({ modalOpen }: { modalOpen: () => void }) {
   //@create a custom radio button
   function CustomRadio(props: any) {
     const { card, ...radioProps } = props;
-    const { state, getInputProps, getRadioProps, htmlProps, getLabelProps } =
+    const { state, getInputProps, getRadioProps, htmlProps } =
       useRadio(radioProps);
 
     return (
@@ -347,7 +347,6 @@ function ButtonGroup({ modalOpen }: { modalOpen: () => void }) {
 export const ModalComponent = ({
   isModalOpen,
   onModalClose,
-  onModalOpen,
 }: {
   isModalOpen: boolean;
   onModalOpen: () => void;
@@ -474,7 +473,7 @@ export const ModalComponent = ({
                   </Text>
                 </>
 
-                <ButtonGroup modalOpen={onModalOpen} />
+                <ButtonGroup />
               </Stack>
 
               <FormControl w={"full"}>
