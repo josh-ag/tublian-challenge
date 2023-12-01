@@ -163,14 +163,14 @@ function CardGroup({ modalOpen }: any) {
                 </Text>
               </Box>
 
-              <Heading fontSize={30} fontWeight={700}>
+              <Text fontSize={30} fontWeight={700} color="white">
                 <Highlight
                   query={"/Month"}
                   styles={{ fontSize: 18, fontWeight: 500, color: "#B7B7B7" }}
                 >
                   {card.heading}
                 </Highlight>
-              </Heading>
+              </Text>
             </VStack>
           </CardHeader>
 

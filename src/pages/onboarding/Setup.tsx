@@ -123,13 +123,13 @@ function CardGroup() {
                   alignSelf={"center"}
                 />
                 <VStack align={{ base: "flex-start", lg: "center" }}>
-                  <Heading
+                  <Text
                     fontSize={{ base: 18, lg: 20, "2xl": 24 }}
                     fontWeight={700}
                     color="white"
                   >
                     {card?.heading}
-                  </Heading>
+                  </Text>
                   <Text
                     fontSize={16}
                     fontWeight={500}
@@ -287,14 +287,14 @@ function SetUpPage() {
         flexWrap={"wrap"}
       >
         <Stack spacing={4} direction={"column"}>
-          <Heading
+          <Text
             fontWeight={700}
             fontSize={{ base: 18, lg: 34, "2xl": 36 }}
             textAlign={"center"}
             color={"white"}
           >
             How are you planning to use Tublian?
-          </Heading>
+          </Text>
           <Text
             textAlign={"center"}
             fontSize={{ base: 14, lg: 16 }}

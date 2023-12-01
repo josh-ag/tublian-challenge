@@ -67,13 +67,7 @@ export default function CreateAccountPage() {
                 objectFit={"contain"}
                 boxSize={"fit-content"}
               />
-              <Heading
-                fontFamily={"Recepts"}
-                fontWeight={"400"}
-                fontSize={13}
-                // lineHeight={18.3}
-                // noOfLines={1}
-              >
+              <Heading fontFamily={"Recepts"} fontWeight={"400"} fontSize={13}>
                 TUBLIAN
               </Heading>
             </HStack>
@@ -155,13 +149,13 @@ export default function CreateAccountPage() {
               justifyContent={"flex-start"}
               alignItems={"flex-start"}
             >
-              <Heading
+              <Text
                 fontWeight={700}
                 fontSize={{ base: 18, lg: 34, "2xl": 36 }}
                 color={"white"}
               >
                 Create Account
-              </Heading>
+              </Text>
               <Text fontSize={16} fontWeight={500} color={"#CFCFCF"}>
                 <Highlight query={"@John Doe"} styles={{ color: "#4BA3FF" }}>
                   Creating account for @John Doe
