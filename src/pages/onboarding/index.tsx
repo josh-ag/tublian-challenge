@@ -77,7 +77,6 @@ export default function () {
               <Link
                 as={RouterLink}
                 to="/"
-                // lineHeight={20}
                 fontWeight={500}
                 fontSize={14}
                 bgClip="text"
@@ -101,10 +100,6 @@ export default function () {
                 fontSize={14}
                 size={"sm"}
                 color={"#696969"}
-                _visited={{
-                  bgClip: "text",
-                  bgGradient: "linear(to-r, #FBDA61,#FF5ACD)",
-                }}
                 _hover={{
                   bgClip: "text",
                   bgGradient: "linear(to-r, #FBDA61,#FF5ACD 84%)",
@@ -119,10 +114,6 @@ export default function () {
                 fontSize={14}
                 size={"sm"}
                 color={"#696969"}
-                _visited={{
-                  bgClip: "text",
-                  bgGradient: "linear(to-r, #FBDA61,#FF5ACD)",
-                }}
                 _hover={{
                   bgClip: "text",
                   bgGradient: "linear(to-r, #FBDA61,#FF5ACD)",
@@ -138,10 +129,6 @@ export default function () {
                 fontSize={14}
                 size={"sm"}
                 _hover={{
-                  bgClip: "text",
-                  bgGradient: "linear(to-r, #FBDA61,#FF5ACD 84%)",
-                }}
-                _active={{
                   bgClip: "text",
                   bgGradient: "linear(to-r, #FBDA61,#FF5ACD 84%)",
                 }}
