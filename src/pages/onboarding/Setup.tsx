@@ -1,5 +1,4 @@
 import {
-  Box,
   Flex,
   Image,
   Heading,
@@ -8,7 +7,6 @@ import {
   Stack,
   VStack,
   Card,
-  CardHeader,
   Text,
   CardBody,
   chakra,
