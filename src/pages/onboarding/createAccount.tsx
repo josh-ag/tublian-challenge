@@ -86,7 +86,6 @@ export default function CreateAccountPage() {
               <Link
                 as={RouterLink}
                 to="/"
-                // lineHeight={20}
                 fontWeight={500}
                 fontSize={14}
                 size={"sm"}
@@ -102,7 +101,6 @@ export default function CreateAccountPage() {
               <Link
                 as={RouterLink}
                 to="/account/create"
-                // lineHeight={20}
                 fontWeight={500}
                 fontSize={14}
                 size={"sm"}
@@ -115,8 +113,6 @@ export default function CreateAccountPage() {
               <Link
                 as={RouterLink}
                 to="/setup"
-                variant={"unstyled"}
-                // lineHeight={20}
                 fontWeight={500}
                 fontSize={14}
                 size={"sm"}
@@ -135,8 +131,6 @@ export default function CreateAccountPage() {
               <Link
                 as={RouterLink}
                 to="/payment"
-                variant={"unstyled"}
-                // lineHeight={20}
                 fontWeight={500}
                 fontSize={14}
                 size={"sm"}

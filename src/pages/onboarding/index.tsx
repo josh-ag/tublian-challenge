@@ -97,12 +97,10 @@ export default function () {
               <Link
                 as={RouterLink}
                 to={"/account/create"}
-                variant={"unstyled"}
-                // lineHeight={20}
                 fontWeight={500}
                 fontSize={14}
                 size={"sm"}
-                color={"disabled"}
+                color={"#696969"}
                 _visited={{
                   bgClip: "text",
                   bgGradient: "linear(to-r, #FBDA61,#FF5ACD)",
@@ -120,7 +118,7 @@ export default function () {
                 fontWeight={500}
                 fontSize={14}
                 size={"sm"}
-                color={"disabled"}
+                color={"#696969"}
                 _visited={{
                   bgClip: "text",
                   bgGradient: "linear(to-r, #FBDA61,#FF5ACD)",
@@ -135,7 +133,7 @@ export default function () {
               <Link
                 as={RouterLink}
                 to="/payment"
-                color={"disabled"}
+                color={"#696969"}
                 fontWeight={500}
                 fontSize={14}
                 size={"sm"}
