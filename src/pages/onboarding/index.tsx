@@ -9,27 +9,29 @@ import {
   FormControl,
   Input,
   Text,
+  Link,
 } from "@chakra-ui/react";
-import { Link } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 import onboardingImg from "../../assets/onboarding_img1.svg";
 import tublianLogo from "../../assets/tublian_logo.svg";
 
 // @Onboarding page1
 export default function () {
+  const navigate = useNavigate();
+
   return (
     <Flex w={"full"} minH={"100vh"} h="full">
       {/*@onboarding1 image container */}
-      <Box flex={1} h={"100%"}>
-        <Image
-          src={onboardingImg}
-          alt="onboarding illustrator"
-          objectFit={"cover"}
-          h="100%"
-          w="100%"
-        />
-      </Box>
+      <Box
+        flex={1}
+        h={"100vh"}
+        backgroundImage={onboardingImg}
+        backgroundRepeat={"no-repeat"}
+        backgroundPosition={"center"}
+        backgroundSize={"cover"}
+        display={{ base: "none", lg: "block" }}
+      />
 
-      {/*@onboarding1 content container */}
       <Box
         flex={1}
         p={12}
@@ -38,7 +40,7 @@ export default function () {
         justifyContent={"space-between"}
       >
         <VStack
-          spacing={20}
+          spacing={8}
           justifyContent={"flex-start"}
           alignItems={"flex-start"}
         >
@@ -47,8 +49,7 @@ export default function () {
             w="full"
             alignItems={"flex-start"}
             justifyContent={"space-between"}
-            spacing={6}
-            flexWrap={"wrap"}
+            flexWrap={{ base: "wrap", "2xl": "nowrap" }}
           >
             {/* content heading  */}
             <HStack cursor={"pointer"}>
@@ -68,18 +69,19 @@ export default function () {
               </Heading>
             </HStack>
 
-            <HStack spacing={8}>
+            <HStack
+              spacing={{ base: 4, lg: 4, xl: 6, "2xl": 8 }}
+              flexWrap={{ base: "wrap", lg: "nowrap" }}
+            >
               {/* @step buttons */}
-              <Button
-                as={Link}
+              <Link
+                as={RouterLink}
                 to="/"
-                variant={"unstyled"}
                 // lineHeight={20}
                 fontWeight={500}
                 fontSize={14}
-                size={"sm"}
-                color={"#ccc"}
                 bgClip="text"
+                textOverflow={"ellipsis"}
                 _visited={{
                   bgClip: "text",
                   bgGradient: "linear(to-r, #FBDA61,#FF5ACD)",
@@ -91,16 +93,16 @@ export default function () {
                 bgGradient={"linear(to-r, #FBDA61,#FF5ACD 84%)"}
               >
                 1:Get Started
-              </Button>
-              <Button
-                as={Link}
+              </Link>
+              <Link
+                as={RouterLink}
                 to={"/account/create"}
                 variant={"unstyled"}
                 // lineHeight={20}
                 fontWeight={500}
                 fontSize={14}
                 size={"sm"}
-                color={"#ccc"}
+                color={"disabled"}
                 _visited={{
                   bgClip: "text",
                   bgGradient: "linear(to-r, #FBDA61,#FF5ACD)",
@@ -109,22 +111,16 @@ export default function () {
                   bgClip: "text",
                   bgGradient: "linear(to-r, #FBDA61,#FF5ACD 84%)",
                 }}
-                // _active={{
-                //   bgClip: "text",
-                //   bgGradient: "linear(to-r, #FBDA61,#FF5ACD 84%)",
-                // }}
               >
                 2:Create Account
-              </Button>
-              <Button
-                as={Link}
-                to="/account/setup"
-                variant={"unstyled"}
-                // lineHeight={20}
+              </Link>
+              <Link
+                as={RouterLink}
+                to="/setup"
                 fontWeight={500}
                 fontSize={14}
                 size={"sm"}
-                color={"#ccc"}
+                color={"disabled"}
                 _visited={{
                   bgClip: "text",
                   bgGradient: "linear(to-r, #FBDA61,#FF5ACD)",
@@ -133,22 +129,16 @@ export default function () {
                   bgClip: "text",
                   bgGradient: "linear(to-r, #FBDA61,#FF5ACD)",
                 }}
-                // _active={{
-                //   bgClip: "text",
-                //   bgGradient: "linear(to-r, #FBDA61,#FF5ACD 84%)",
-                // }}
               >
                 3:Account Setup
-              </Button>
-              <Button
-                as={Link}
+              </Link>
+              <Link
+                as={RouterLink}
                 to="/payment"
-                variant={"unstyled"}
-                // lineHeight={20}
+                color={"disabled"}
                 fontWeight={500}
                 fontSize={14}
                 size={"sm"}
-                color={"#ccc"}
                 _hover={{
                   bgClip: "text",
                   bgGradient: "linear(to-r, #FBDA61,#FF5ACD 84%)",
@@ -159,20 +149,25 @@ export default function () {
                 }}
               >
                 4:Payment
-              </Button>
+              </Link>
             </HStack>
           </HStack>
 
-          <FormControl w={{ base: "full", lg: "70%", xl: "50%" }}>
+          <FormControl w={{ base: "full", lg: "80%", xl: "70%", "2xl": "50%" }}>
             <VStack
-              spacing={8}
+              spacing={4}
               justifyContent={"flex-start"}
               alignItems={"flex-start"}
+              w={"full"}
             >
-              <Heading fontWeight={700} fontSize={36}>
+              <Heading
+                fontWeight={700}
+                fontSize={{ base: 18, lg: 34, "2xl": 36 }}
+                w="auto"
+              >
                 Getting Started
               </Heading>
-              <Text fontSize={16} fontWeight={500}>
+              <Text fontSize={16} fontWeight={500} color={"#CFCFCF"}>
                 Start recruiting streetcred developers, Today!!
               </Text>
               <Input
@@ -205,6 +200,7 @@ export default function () {
                 rounded={30}
                 fontWeight={500}
                 size={"lg"}
+                onClick={() => navigate("/account/create")}
               >
                 Proceed
               </Button>
@@ -212,15 +208,14 @@ export default function () {
                 <Text fontSize={16} fontWeight={400}>
                   Dont have account?
                 </Text>
-                <Button
-                  as={Link}
+                <Link
+                  as={RouterLink}
                   to="/account/create"
-                  variant={"link"}
                   fontWeight={700}
                   fontSize={16}
                 >
                   Create Account
-                </Button>
+                </Link>
               </HStack>
             </VStack>
           </FormControl>

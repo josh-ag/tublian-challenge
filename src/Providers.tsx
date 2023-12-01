@@ -31,6 +31,8 @@ const fonts = {
 // @colors
 const colors = {
   primary: "#FDD649",
+  white: "#FEFEFE",
+  disabled: "#696969",
   brand: {
     900: "#fdcb1a",
     800: "#fdd649",

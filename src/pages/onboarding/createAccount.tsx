@@ -13,34 +13,30 @@ import {
   Highlight,
   Checkbox,
   Divider,
+  Link,
 } from "@chakra-ui/react";
-import { Link } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 import onboardingImg2 from "../../assets/onboarding_img2.svg";
 import tublianLogo from "../../assets/tublian_logo.svg";
 import logoGoogle from "../../assets/icon_google.svg";
 
 // @Onboarding page2
 export default function CreateAccountPage() {
+  const navigate = useNavigate();
+
   return (
     <Flex w={"full"} minH={"100vh"} h={"full"} pos={"relative"}>
       {/*@onboarding2 image container */}
       <Box
-        // pos={"absolute"}
         flex={1}
-        // w={"50%"}
-        // maxW={"50%"}
         h={"100vh"}
-        minH={"100vh"}
-        bgGradient={"linear(to-b, #FDD649,#BCC83D)"}
-      >
-        <Image
-          src={onboardingImg2}
-          alt="onboarding illustrator"
-          objectFit={{ base: "fill", lg: "contain" }}
-          h="100%"
-          w="100%"
-        />
-      </Box>
+        bg={"brand.800"}
+        backgroundImage={onboardingImg2}
+        backgroundRepeat={"no-repeat"}
+        backgroundPosition={"center"}
+        backgroundSize={{ lg: "fill", xl: "contain", "2xl": "contain" }}
+        display={{ base: "none", lg: "block" }}
+      />
 
       {/*@onboarding2 content container */}
       <Box
@@ -52,7 +48,7 @@ export default function CreateAccountPage() {
         justifyContent={"space-between"}
       >
         <VStack
-          spacing={16}
+          spacing={8}
           justifyContent={"flex-start"}
           alignItems={"flex-start"}
           h="auto"
@@ -62,8 +58,7 @@ export default function CreateAccountPage() {
             w="full"
             alignItems={"flex-start"}
             justifyContent={"space-between"}
-            spacing={6}
-            flexWrap={"wrap"}
+            flexWrap={{ base: "wrap", "2xl": "nowrap" }}
           >
             {/* content heading  */}
             <HStack cursor={"pointer"} w="auto">
@@ -83,18 +78,19 @@ export default function CreateAccountPage() {
               </Heading>
             </HStack>
 
-            <HStack spacing={8}>
+            <HStack
+              spacing={{ base: 4, lg: 4, xl: 6, "2xl": 8 }}
+              flexWrap={{ base: "wrap", lg: "nowrap" }}
+            >
               {/* @step buttons */}
-              <Button
-                as={Link}
+              <Link
+                as={RouterLink}
                 to="/"
-                variant={"unstyled"}
                 // lineHeight={20}
                 fontWeight={500}
                 fontSize={14}
                 size={"sm"}
-                bgClip="text"
-                // color={"#ccc"}
+                bgClip={"text"}
                 _hover={{
                   bgClip: "text",
                   bgGradient: "linear(to-r, #FBDA61,#FF5ACD)",
@@ -102,30 +98,29 @@ export default function CreateAccountPage() {
                 bgGradient={"linear(to-r, #FBDA61,#FF5ACD 84%)"}
               >
                 1:Get Started
-              </Button>
-              <Button
-                as={Link}
+              </Link>
+              <Link
+                as={RouterLink}
                 to="/account/create"
-                variant={"unstyled"}
                 // lineHeight={20}
                 fontWeight={500}
                 fontSize={14}
                 size={"sm"}
-                color={"#ccc"}
+                color={"#696969"}
                 bgClip="text"
                 bgGradient="linear(to-r, #FBDA61,#FF5ACD 84%)"
               >
                 2:Create Account
-              </Button>
-              <Button
-                as={Link}
+              </Link>
+              <Link
+                as={RouterLink}
                 to="/setup"
                 variant={"unstyled"}
                 // lineHeight={20}
                 fontWeight={500}
                 fontSize={14}
                 size={"sm"}
-                color={"#ccc"}
+                color={"#696969"}
                 _hover={{
                   bgClip: "text",
                   bgGradient: "linear(to-r, #FBDA61,#FF5ACD)",
@@ -136,16 +131,16 @@ export default function CreateAccountPage() {
                 }}
               >
                 3:Account Setup
-              </Button>
-              <Button
-                as={Link}
+              </Link>
+              <Link
+                as={RouterLink}
                 to="/payment"
                 variant={"unstyled"}
                 // lineHeight={20}
                 fontWeight={500}
                 fontSize={14}
                 size={"sm"}
-                color={"#ccc"}
+                color={"#696969"}
                 _hover={{
                   bgClip: "text",
                   bgGradient: "linear(to-r, #FBDA61,#FF5ACD 84%)",
@@ -156,20 +151,24 @@ export default function CreateAccountPage() {
                 }}
               >
                 4:Payment
-              </Button>
+              </Link>
             </HStack>
           </HStack>
 
-          <FormControl w={{ base: "full", lg: "70%", xl: "50%" }}>
+          <FormControl w={{ base: "full", lg: "80%", xl: "70%", "2xl": "50%" }}>
             <VStack
-              spacing={8}
+              spacing={4}
               justifyContent={"flex-start"}
               alignItems={"flex-start"}
             >
-              <Heading fontWeight={700} fontSize={36}>
+              <Heading
+                fontWeight={700}
+                fontSize={{ base: 18, lg: 34, "2xl": 36 }}
+                color={"white"}
+              >
                 Create Account
               </Heading>
-              <Text fontSize={16} fontWeight={500}>
+              <Text fontSize={16} fontWeight={500} color={"#CFCFCF"}>
                 <Highlight query={"@John Doe"} styles={{ color: "#4BA3FF" }}>
                   Creating account for @John Doe
                 </Highlight>
@@ -196,7 +195,6 @@ export default function CreateAccountPage() {
                 focusBorderColor="#CFCFCF"
                 borderColor={"#888"}
               />
-
               <Stack direction="row" wrap={"wrap"}>
                 <Checkbox
                   fontSize={12}
@@ -223,6 +221,7 @@ export default function CreateAccountPage() {
                   rounded={30}
                   fontWeight={500}
                   size="lg"
+                  onClick={() => navigate("/setup")}
                 >
                   Create Account
                 </Button>
@@ -265,15 +264,9 @@ export default function CreateAccountPage() {
                 <Text fontSize={16} fontWeight={400}>
                   Already have account?
                 </Text>
-                <Button
-                  as={Link}
-                  to="/"
-                  variant={"link"}
-                  fontWeight={700}
-                  fontSize={16}
-                >
+                <Link as={RouterLink} to="/" fontWeight={700} fontSize={16}>
                   Login
-                </Button>
+                </Link>
               </HStack>
             </VStack>
           </FormControl>

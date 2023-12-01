@@ -37,8 +37,9 @@ import {
   InputGroup,
   InputLeftElement,
   InputRightElement,
+  Link,
 } from "@chakra-ui/react";
-import { Link } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
 import tublianLogo from "../../assets/tublian_logo.svg";
 import { ButtonType, PaymentType } from "../../type";
 import { IoIosArrowDown } from "react-icons/io";
@@ -131,23 +132,20 @@ function CardGroup({ modalOpen }: any) {
       <chakra.label
         {...htmlProps}
         rounded={20}
-        sx={{ padding: 0.5 }}
         boxShadow={"md"}
-        w={300}
-        minH={464}
+        w={{ base: "full", lg: 300 }}
         h="auto"
         bg={"#292929"}
         bgGradient={state.isChecked ? "linear(to-r,#FBDA61,#FF5ACD 84%)" : ""}
+        sx={{ padding: 0.5 }}
       >
         <input {...getInputProps({})} hidden />
         <Card
           {...getRadioProps()}
           w="full"
-          minH="100%"
           h="full"
           bgColor={"gray.800"}
           rounded={20}
-          // p={4}
         >
           <CardHeader display="flex" justifyContent={"flex-start"}>
             <VStack justify={"flex-start"} align={"flex-start"} spacing={4}>
@@ -232,19 +230,22 @@ function CardGroup({ modalOpen }: any) {
   }
 
   return (
-    <Stack {...getRootProps()}>
-      <HStack spacing={6} align={"stretch"}>
-        {cards.map((card) => {
-          return (
-            <CustomRadio
-              key={card.name}
-              card={card}
-              image={card.name}
-              {...getRadioProps({ value: card.name })}
-            />
-          );
-        })}
-      </HStack>
+    <Stack
+      direction={{ base: "column", lg: "row" }}
+      spacing={6}
+      align={"stretch"}
+      {...getRootProps()}
+    >
+      {cards.map((card) => {
+        return (
+          <CustomRadio
+            key={card.name}
+            card={card}
+            image={card.name}
+            {...getRadioProps({ value: card.name })}
+          />
+        );
+      })}
     </Stack>
   );
 }
@@ -290,7 +291,7 @@ function ButtonGroup() {
       <chakra.label
         {...htmlProps}
         sx={{ padding: 0.5 }}
-        w="full"
+        w={"full"}
         bg={"#292929"}
         borderRadius={10}
         bgGradient={state.isChecked ? "linear(to-r,#FBDA61,#FF5ACD 84%)" : ""}
@@ -364,13 +365,7 @@ export const ModalComponent = ({
     <>
       <Modal isCentered isOpen={isModalOpen} onClose={onModalClose}>
         <ModalOverlay bg="blackAlpha.500" backdropFilter="blur(50px)" />
-        <ModalContent
-          w={580}
-          // py={8}
-          borderRadius={20}
-          bg={"#1E1E1E"}
-          shadow={"none"}
-        >
+        <ModalContent w={580} borderRadius={20} bg={"#1E1E1E"} shadow={"none"}>
           <HStack p={4} align={"center"} justify={"space-between"} w={"full"}>
             <HStack cursor={"pointer"}>
               <Image
@@ -378,7 +373,12 @@ export const ModalComponent = ({
                 objectFit={"contain"}
                 boxSize={"fit-content"}
               />
-              <Heading fontFamily={"Recepts"} fontWeight={"400"} fontSize={13}>
+              <Heading
+                fontFamily={"Recepts"}
+                fontWeight={"400"}
+                fontSize={13}
+                color="white"
+              >
                 TUBLIAN
               </Heading>
             </HStack>
@@ -437,13 +437,13 @@ export const ModalComponent = ({
                       bgGradient={"linear(to-b,#0881FF,#0B4F95)"}
                       sx={{ border: `1px solid #79BBFF` }}
                     >
-                      <Text fontSize={18} fontWeight={700} color={"#FEFEFE"}>
+                      <Text fontSize={18} fontWeight={700} color={"white"}>
                         Business Plan
                       </Text>
                     </Box>
 
                     <HStack justify={"space-between"}>
-                      <Text fontSize={18} fontWeight={500} color={"#FEFEFE"}>
+                      <Text fontSize={18} fontWeight={500} color={"white"}>
                         Total
                       </Text>
                       <Heading fontSize={18} fontWeight={500} color={"#B7B7B7"}>
@@ -452,7 +452,7 @@ export const ModalComponent = ({
                           styles={{
                             fontSize: 30,
                             fontWeight: 700,
-                            color: "#FEFEFE",
+                            color: "white",
                           }}
                         >
                           usd $49.99/Month
@@ -483,7 +483,7 @@ export const ModalComponent = ({
                   justify={"flex-start"}
                   alignItems={"flex-start"}
                 >
-                  <Heading fontSize={20} fontWeight={700}>
+                  <Heading fontSize={20} fontWeight={700} color={"white"}>
                     Payment Details
                   </Heading>
                   <Input
@@ -614,7 +614,7 @@ export const ModalComponent = ({
           <ModalFooter justifyContent={"flex-start"}>
             <HStack spacing={6}>
               <Image src={logoStripe} objectFit={"cover"} />
-              <Text fontSize={16} fontWeight={500}>
+              <Text fontSize={16} fontWeight={500} color="white">
                 Powered by Stripe.com
               </Text>
             </HStack>
@@ -626,7 +626,6 @@ export const ModalComponent = ({
         <ModalContent
           w={580}
           h={491}
-          // py={8}
           borderRadius={20}
           bg={"#1E1E1E"}
           shadow={"none"}
@@ -645,14 +644,19 @@ export const ModalComponent = ({
                 objectFit={"contain"}
                 boxSize={"fit-content"}
               />
-              <Heading fontFamily={"Recepts"} fontWeight={"400"} fontSize={13}>
+              <Heading
+                fontFamily={"Recepts"}
+                fontWeight={"400"}
+                fontSize={13}
+                color="white"
+              >
                 TUBLIAN
               </Heading>
             </HStack>
 
             <Image src={checkMark} objectFit={"cover"} />
           </Flex>
-          <VStack spacing={6}>
+          <VStack spacing={6} px={4}>
             <Heading fontSize={30} fontWeight={700}>
               Payment Successful
             </Heading>
@@ -696,15 +700,15 @@ export default function PaymentPage() {
         h="full"
         p={10}
         alignItems={"center"}
-        justify={"space-between"}
+        justify={{ md: "flex-start", lg: "space-between" }}
         gap={10}
       >
         {/* @Onboarding3 header  */}
-        <Stack
+        <HStack
           w="full"
-          direction={"row"}
           alignItems={"flex-start"}
-          justify={"space-between"}
+          justifyContent={"space-between"}
+          flexWrap={{ base: "wrap", "2xl": "nowrap" }}
         >
           {/* content heading  */}
           <HStack cursor={"pointer"}>
@@ -714,28 +718,28 @@ export default function PaymentPage() {
               boxSize={"fit-content"}
             />
             <Heading
+              color="white"
               fontFamily={"Recepts"}
               fontWeight={"400"}
               fontSize={13}
-              // lineHeight={18.3}
-              // noOfLines={1}
             >
               TUBLIAN
             </Heading>
           </HStack>
 
-          <HStack spacing={8}>
+          <HStack
+            spacing={{ base: 4, lg: 4, xl: 6, "2xl": 8 }}
+            flexWrap={{ base: "wrap", lg: "nowrap" }}
+            w={"auto"}
+          >
             {/* @step buttons */}
-            <Button
-              as={Link}
+            <Link
+              as={RouterLink}
               to="/"
-              variant={"unstyled"}
-              // lineHeight={20}
               fontWeight={500}
               fontSize={14}
               size={"sm"}
               bgClip="text"
-              // color={"#ccc"}
               _hover={{
                 bgClip: "text",
                 bgGradient: "linear(to-r, #FBDA61,#FF5ACD)",
@@ -743,12 +747,10 @@ export default function PaymentPage() {
               bgGradient={"linear(to-r, #FBDA61,#FF5ACD 84%)"}
             >
               1:Get Started
-            </Button>
-            <Button
-              as={Link}
+            </Link>
+            <Link
+              as={RouterLink}
               to="/account/create"
-              variant={"unstyled"}
-              // lineHeight={20}
               fontWeight={500}
               fontSize={14}
               size={"sm"}
@@ -757,12 +759,10 @@ export default function PaymentPage() {
               bgGradient="linear(to-r, #FBDA61,#FF5ACD 84%)"
             >
               2:Create Account
-            </Button>
-            <Button
-              as={Link}
+            </Link>
+            <Link
+              as={RouterLink}
               to="/setup"
-              variant={"unstyled"}
-              // lineHeight={20}
               fontWeight={500}
               fontSize={14}
               size={"sm"}
@@ -774,12 +774,10 @@ export default function PaymentPage() {
               }}
             >
               3:Account Setup
-            </Button>
-            <Button
-              as={Link}
+            </Link>
+            <Link
+              as={RouterLink}
               to="/payment"
-              variant={"unstyled"}
-              // lineHeight={20}
               fontWeight={500}
               fontSize={14}
               size={"sm"}
@@ -791,9 +789,9 @@ export default function PaymentPage() {
               }}
             >
               4:Payment
-            </Button>
+            </Link>
           </HStack>
-        </Stack>
+        </HStack>
 
         <VStack
           //@Setup page content
@@ -802,10 +800,20 @@ export default function PaymentPage() {
           alignItems={"center"}
         >
           <VStack spacing={4}>
-            <Heading fontWeight={700} fontSize={36} textAlign={"center"}>
+            <Heading
+              fontWeight={700}
+              fontSize={{ base: 18, lg: 34, "2xl": 36 }}
+              color={"white"}
+              textAlign={"center"}
+            >
               Payment Plan
             </Heading>
-            <Text fontSize={16} fontWeight={500} color={"#CFCFCF"}>
+            <Text
+              fontSize={{ base: 14, lg: 16 }}
+              fontWeight={500}
+              color={"#CFCFCF"}
+              textAlign={"center"}
+            >
               We will customize your experience based on your option.
             </Text>
           </VStack>
@@ -825,7 +833,7 @@ export default function PaymentPage() {
                 sx={{ border: "1px solid #292929", padding: 0.4 }}
                 rounded={20}
                 p={1}
-                w={"50%"}
+                w={{ base: "full", lg: "md" }}
                 alignSelf={"center"}
               >
                 <Tab
@@ -834,10 +842,14 @@ export default function PaymentPage() {
                     borderRadius: 16,
                     bgGradient: "linear(to-r, #FBDA61,#FF5ACD 84%)",
                   }}
-                  fontSize={20}
-                  fontWeight={700}
                 >
-                  Monthly
+                  <Text
+                    fontSize={{ base: 18, lg: 20 }}
+                    fontWeight={700}
+                    color={"white"}
+                  >
+                    Monthly
+                  </Text>
                 </Tab>
                 <Tab
                   w="full"
@@ -847,7 +859,11 @@ export default function PaymentPage() {
                   }}
                 >
                   <HStack>
-                    <Text fontSize={20} fontWeight={700}>
+                    <Text
+                      fontSize={{ base: 18, lg: 20 }}
+                      fontWeight={700}
+                      color="white"
+                    >
                       Annually
                     </Text>
                     <Button

@@ -15,8 +15,9 @@ import {
   useRadioGroup,
   useRadio,
   useToast,
+  Link,
 } from "@chakra-ui/react";
-import { Link } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
 import tublianLogo from "../../assets/tublian_logo.svg";
 import tickCircle from "../../assets/tick-circle.svg";
 import teamProjectImage from "../../assets/team_project_card1.svg";
@@ -76,12 +77,9 @@ function CardGroup() {
         rounded={20}
         sx={{ padding: 0.5 }}
         boxShadow={"md"}
-        w="sm"
+        w={{ base: "full", lg: 250 }}
         bg={"#292929"}
         bgGradient={state.isChecked ? "linear(to-r,#FBDA61,#FF5ACD 84%)" : ""}
-        // _hover={{
-        //   bgGradient: "linear(to-r,#FBDA61,#FF5ACD 84%)",
-        // }}
       >
         <input {...getInputProps({})} hidden />
         <Card
@@ -91,44 +89,60 @@ function CardGroup() {
           bgColor={"gray.800"}
           rounded={20}
         >
-          <CardHeader display="flex" justifyContent={"flex-end"}>
-            <Flex
-              {...getRadioProps()}
-              w={6}
-              h={6}
-              rounded="full"
-              sx={{ border: `1px solid #292929` }}
+          <CardBody w={"full"}>
+            <Stack
+              direction={{ base: "row-reverse", lg: "column" }}
+              spacing={6}
+              justify={"space-between"}
             >
-              {state.isChecked ? (
-                <Image
-                  src={card.tick}
-                  objectFit={"cover"}
-                  rounded="full"
-                  {...getLabelProps()}
-                />
-              ) : null}
-            </Flex>
-          </CardHeader>
-
-          <CardBody>
-            <VStack spacing={4}>
-              <Image
-                src={card.image}
-                objectFit={"cover"}
-                alignSelf={"center"}
-              />
-              <Heading fontSize={20} fontWeight={700} color="#FCFCFC">
-                {card?.heading}
-              </Heading>
-              <Text
-                fontSize={16}
-                fontWeight={500}
-                textOverflow={"wrap"}
-                textAlign={"center"}
+              <Flex
+                {...getRadioProps()}
+                w={6}
+                h={6}
+                rounded="full"
+                sx={{ border: `1px solid #292929` }}
+                alignSelf={{ base: "center", lg: "flex-end" }}
               >
-                {card.text}
-              </Text>
-            </VStack>
+                {state.isChecked ? (
+                  <Image
+                    src={card.tick}
+                    objectFit={"cover"}
+                    rounded="full"
+                    {...getLabelProps()}
+                  />
+                ) : null}
+              </Flex>
+              <Stack
+                flex={1}
+                direction={{ base: "row", lg: "column" }}
+                justify={"flex-start"}
+                align={"center"}
+                spacing={4}
+              >
+                <Image
+                  src={card.image}
+                  objectFit={"cover"}
+                  alignSelf={"center"}
+                />
+                <VStack align={{ base: "flex-start", lg: "center" }}>
+                  <Heading
+                    fontSize={{ base: 18, lg: 20, "2xl": 24 }}
+                    fontWeight={700}
+                    color="white"
+                  >
+                    {card?.heading}
+                  </Heading>
+                  <Text
+                    fontSize={16}
+                    fontWeight={500}
+                    textOverflow={"wrap"}
+                    textAlign={{ base: "left", lg: "center" }}
+                  >
+                    {card.text}
+                  </Text>
+                </VStack>
+              </Stack>
+            </Stack>
           </CardBody>
         </Card>
       </chakra.label>
@@ -136,19 +150,22 @@ function CardGroup() {
   }
 
   return (
-    <Stack {...getRootProps()}>
-      <HStack spacing={6}>
-        {cards.map((card) => {
-          return (
-            <CustomRadio
-              key={card.name}
-              card={card}
-              image={card.tick}
-              {...getRadioProps({ value: card.name })}
-            />
-          );
-        })}
-      </HStack>
+    <Stack
+      direction={{ base: "column", lg: "row" }}
+      spacing={6}
+      align={"stretch"}
+      {...getRootProps()}
+    >
+      {cards.map((card) => {
+        return (
+          <CustomRadio
+            key={card.name}
+            card={card}
+            image={card.tick}
+            {...getRadioProps({ value: card.name })}
+          />
+        );
+      })}
     </Stack>
   );
 }
@@ -163,15 +180,15 @@ function SetUpPage() {
       h="full"
       p={10}
       alignItems={"center"}
-      justify={"space-between"}
+      justify={{ md: "flex-start", lg: "space-between" }}
       gap={10}
     >
       {/* @Onboarding3 header  */}
-      <Stack
+      <HStack
         w="full"
-        direction={"row"}
         alignItems={"flex-start"}
-        justify={"space-between"}
+        justifyContent={"space-between"}
+        flexWrap={{ base: "wrap", "2xl": "nowrap" }}
       >
         {/* content heading  */}
         <HStack cursor={"pointer"}>
@@ -184,6 +201,7 @@ function SetUpPage() {
             fontFamily={"Recepts"}
             fontWeight={"400"}
             fontSize={13}
+            color={"#FEFEFE"}
             // lineHeight={18.3}
             // noOfLines={1}
           >
@@ -191,18 +209,19 @@ function SetUpPage() {
           </Heading>
         </HStack>
 
-        <HStack spacing={8}>
+        <HStack
+          spacing={{ base: 4, lg: 4, xl: 6, "2xl": 8 }}
+          flexWrap={{ base: "wrap", lg: "nowrap" }}
+          w={"auto"}
+        >
           {/* @step buttons */}
-          <Button
-            as={Link}
-            to="/"
-            variant={"unstyled"}
-            // lineHeight={20}
+          <Link
+            as={RouterLink}
+            to={"/"}
             fontWeight={500}
             fontSize={14}
             size={"sm"}
             bgClip="text"
-            // color={"#ccc"}
             _hover={{
               bgClip: "text",
               bgGradient: "linear(to-r, #FBDA61,#FF5ACD)",
@@ -210,11 +229,10 @@ function SetUpPage() {
             bgGradient={"linear(to-r, #FBDA61,#FF5ACD 84%)"}
           >
             1:Get Started
-          </Button>
-          <Button
-            as={Link}
+          </Link>
+          <Link
+            as={RouterLink}
             to="/account/create"
-            variant={"unstyled"}
             // lineHeight={20}
             fontWeight={500}
             fontSize={14}
@@ -224,11 +242,10 @@ function SetUpPage() {
             bgGradient="linear(to-r, #FBDA61,#FF5ACD 84%)"
           >
             2:Create Account
-          </Button>
-          <Button
-            as={Link}
+          </Link>
+          <Link
+            as={RouterLink}
             to="/setup"
-            variant={"unstyled"}
             // lineHeight={20}
             fontWeight={500}
             fontSize={14}
@@ -241,16 +258,15 @@ function SetUpPage() {
             }}
           >
             3:Account Setup
-          </Button>
-          <Button
-            as={Link}
+          </Link>
+          <Link
+            as={RouterLink}
             to="/payment"
-            variant={"unstyled"}
             // lineHeight={20}
             fontWeight={500}
             fontSize={14}
             size={"sm"}
-            color={"#ccc"}
+            color={"disabled"}
             _hover={{
               bgClip: "text",
               bgGradient: "linear(to-r, #FBDA61,#FF5ACD 84%)",
@@ -261,35 +277,45 @@ function SetUpPage() {
             }}
           >
             4:Payment
-          </Button>
+          </Link>
         </HStack>
-      </Stack>
+      </HStack>
 
       <VStack
         //@Setup page content
         spacing={10}
         justifyContent={"center"}
         alignItems={"center"}
+        flexWrap={"wrap"}
       >
-        <VStack spacing={4}>
-          <Heading fontWeight={700} fontSize={36} textAlign={"center"}>
+        <Stack spacing={4} direction={"column"}>
+          <Heading
+            fontWeight={700}
+            fontSize={{ base: 18, lg: 34, "2xl": 36 }}
+            textAlign={"center"}
+            color={"white"}
+          >
             How are you planning to use Tublian?
           </Heading>
-          <Text fontSize={16} fontWeight={500} color={"#CFCFCF"}>
+          <Text
+            textAlign={"center"}
+            fontSize={{ base: 14, lg: 16 }}
+            fontWeight={500}
+            color={"#CFCFCF"}
+            sx={{ overflow: "visible" }}
+          >
             We will customize your experience based on your option.
           </Text>
-        </VStack>
+        </Stack>
 
-        <Box>
-          <CardGroup />
-        </Box>
+        <CardGroup />
 
         <Button
           //@Submit button
-          as={Link}
+          as={RouterLink}
           to="/payment"
           variant={"unstyled"}
-          w={405}
+          w={{ base: "full", lg: 405 }}
           bgColor="brand.800"
           color={"gray.700"}
           rounded={30}
