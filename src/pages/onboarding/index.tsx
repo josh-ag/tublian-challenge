@@ -34,7 +34,7 @@ export default function () {
 
       <Box
         flex={1}
-        p={12}
+        p={{ base: 4, lg: 10 }}
         display={"flex"}
         flexDirection={"column"}
         justifyContent={"space-between"}
@@ -58,15 +58,9 @@ export default function () {
                 objectFit={"contain"}
                 boxSize={"fit-content"}
               />
-              <Heading
-                fontFamily={"Recepts"}
-                fontWeight={"400"}
-                fontSize={13}
-                // lineHeight={18.3}
-                // noOfLines={1}
-              >
+              <Text fontFamily={"Recepts"} fontWeight={400} fontSize={13}>
                 TUBLIAN
-              </Heading>
+              </Text>
             </HStack>
 
             <HStack
@@ -145,13 +139,13 @@ export default function () {
               alignItems={"flex-start"}
               w={"full"}
             >
-              <Heading
+              <Text
                 fontWeight={700}
                 fontSize={{ base: 18, lg: 34, "2xl": 36 }}
                 w="auto"
               >
                 Getting Started
-              </Heading>
+              </Text>
               <Text fontSize={16} fontWeight={500} color={"#CFCFCF"}>
                 Start recruiting streetcred developers, Today!!
               </Text>

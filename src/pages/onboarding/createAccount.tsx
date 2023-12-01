@@ -2,7 +2,6 @@ import {
   Box,
   Flex,
   Image,
-  Heading,
   HStack,
   Button,
   Stack,
@@ -40,9 +39,8 @@ export default function CreateAccountPage() {
 
       {/*@onboarding2 content container */}
       <Box
-        // pos={"relative"}
+        p={{ base: 4, lg: 10 }}
         flex={1}
-        p={12}
         display={"flex"}
         flexDirection={"column"}
         justifyContent={"space-between"}
@@ -67,9 +65,9 @@ export default function CreateAccountPage() {
                 objectFit={"contain"}
                 boxSize={"fit-content"}
               />
-              <Heading fontFamily={"Recepts"} fontWeight={"400"} fontSize={13}>
+              <Text fontFamily={"Recepts"} fontWeight={"400"} fontSize={13}>
                 TUBLIAN
-              </Heading>
+              </Text>
             </HStack>
 
             <HStack
@@ -145,7 +143,7 @@ export default function CreateAccountPage() {
 
           <FormControl w={{ base: "full", lg: "80%", xl: "70%", "2xl": "50%" }}>
             <VStack
-              spacing={4}
+              spacing={2}
               justifyContent={"flex-start"}
               alignItems={"flex-start"}
             >

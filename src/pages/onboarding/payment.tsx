@@ -2,7 +2,6 @@ import {
   Box,
   Flex,
   Image,
-  Heading,
   HStack,
   Button,
   Stack,
@@ -176,9 +175,9 @@ function CardGroup({ modalOpen }: any) {
 
           <CardBody>
             <VStack spacing={4} align={"flex-start"}>
-              <Heading fontSize={20} fontWeight={500} color="#B7B7B7">
+              <Text fontSize={20} fontWeight={500} color="#B7B7B7">
                 Features:
-              </Heading>
+              </Text>
 
               <List spacing={4}>
                 {card.features.map((text: string, index: number) => (
@@ -365,7 +364,13 @@ export const ModalComponent = ({
     <>
       <Modal isCentered isOpen={isModalOpen} onClose={onModalClose}>
         <ModalOverlay bg="blackAlpha.500" backdropFilter="blur(50px)" />
-        <ModalContent w={580} borderRadius={20} bg={"#1E1E1E"} shadow={"none"}>
+        <ModalContent
+          w={580}
+          h="auto"
+          borderRadius={20}
+          bg={"#1E1E1E"}
+          shadow={"none"}
+        >
           <HStack p={4} align={"center"} justify={"space-between"} w={"full"}>
             <HStack cursor={"pointer"}>
               <Image
@@ -373,14 +378,14 @@ export const ModalComponent = ({
                 objectFit={"contain"}
                 boxSize={"fit-content"}
               />
-              <Heading
+              <Text
                 fontFamily={"Recepts"}
                 fontWeight={"400"}
                 fontSize={13}
                 color="white"
               >
                 TUBLIAN
-              </Heading>
+              </Text>
             </HStack>
 
             <Box as={Button} onClick={onModalClose} variant={"unstyled"}>
@@ -404,9 +409,9 @@ export const ModalComponent = ({
               >
                 <CardHeader>
                   <HStack justify={"space-between"}>
-                    <Heading fontSize={20} fontWeight={700}>
+                    <Text fontSize={20} fontWeight={700} color="white">
                       Monthly Plan
-                    </Heading>
+                    </Text>
                     <Button
                       onClick={onModalClose}
                       variant="unstyled"
@@ -446,7 +451,7 @@ export const ModalComponent = ({
                       <Text fontSize={18} fontWeight={500} color={"white"}>
                         Total
                       </Text>
-                      <Heading fontSize={18} fontWeight={500} color={"#B7B7B7"}>
+                      <Text fontSize={18} fontWeight={500} color={"#B7B7B7"}>
                         <Highlight
                           query={"$49.99"}
                           styles={{
@@ -457,7 +462,7 @@ export const ModalComponent = ({
                         >
                           usd $49.99/Month
                         </Highlight>
-                      </Heading>
+                      </Text>
                     </HStack>
                   </Stack>
                 </CardBody>
@@ -465,9 +470,9 @@ export const ModalComponent = ({
 
               <Stack w="full" direction={"column"} spacing={4}>
                 <>
-                  <Heading fontSize={20} fontWeight={700}>
+                  <Text fontSize={20} fontWeight={700}>
                     Payment method
-                  </Heading>
+                  </Text>
                   <Text fontSize={16} fontWeight={500} color={"#B7B7B7"}>
                     Choose how you'd like to pay
                   </Text>
@@ -483,9 +488,9 @@ export const ModalComponent = ({
                   justify={"flex-start"}
                   alignItems={"flex-start"}
                 >
-                  <Heading fontSize={20} fontWeight={700} color={"white"}>
+                  <Text fontSize={20} fontWeight={700} color={"white"}>
                     Payment Details
-                  </Heading>
+                  </Text>
                   <Input
                     type="email"
                     placeholder="Email"
@@ -644,22 +649,22 @@ export const ModalComponent = ({
                 objectFit={"contain"}
                 boxSize={"fit-content"}
               />
-              <Heading
+              <Text
                 fontFamily={"Recepts"}
                 fontWeight={"400"}
                 fontSize={13}
                 color="white"
               >
                 TUBLIAN
-              </Heading>
+              </Text>
             </HStack>
 
             <Image src={checkMark} objectFit={"cover"} />
           </Flex>
           <VStack spacing={6} px={4}>
-            <Heading fontSize={30} fontWeight={700}>
+            <Text color={"white"} fontSize={30} fontWeight={700}>
               Payment Successful
-            </Heading>
+            </Text>
             <Text fontSize={16} fontWeight={500} color={"#CFCFCF"}>
               Your payment went through successfully.
             </Text>
@@ -696,9 +701,8 @@ export default function PaymentPage() {
       <Flex
         w={"full"}
         direction={"column"}
-        minH={"100vh"}
         h="full"
-        p={10}
+        p={{ base: 4, lg: 10 }}
         alignItems={"center"}
         justify={{ md: "flex-start", lg: "space-between" }}
         gap={10}
@@ -709,6 +713,7 @@ export default function PaymentPage() {
           alignItems={"flex-start"}
           justifyContent={"space-between"}
           flexWrap={{ base: "wrap", "2xl": "nowrap" }}
+          spacing={4}
         >
           {/* content heading  */}
           <HStack cursor={"pointer"}>
@@ -717,14 +722,14 @@ export default function PaymentPage() {
               objectFit={"contain"}
               boxSize={"fit-content"}
             />
-            <Heading
+            <Text
               color="white"
               fontFamily={"Recepts"}
               fontWeight={"400"}
               fontSize={13}
             >
               TUBLIAN
-            </Heading>
+            </Text>
           </HStack>
 
           <HStack
@@ -800,14 +805,14 @@ export default function PaymentPage() {
           alignItems={"center"}
         >
           <VStack spacing={4}>
-            <Heading
+            <Text
               fontWeight={700}
               fontSize={{ base: 18, lg: 34, "2xl": 36 }}
               color={"white"}
               textAlign={"center"}
             >
               Payment Plan
-            </Heading>
+            </Text>
             <Text
               fontSize={{ base: 14, lg: 16 }}
               fontWeight={500}
@@ -835,8 +840,10 @@ export default function PaymentPage() {
                 p={1}
                 w={{ base: "full", lg: "md" }}
                 alignSelf={"center"}
+                display={"flex"}
               >
                 <Tab
+                  flex={1}
                   w="full"
                   _selected={{
                     borderRadius: 16,
@@ -844,7 +851,7 @@ export default function PaymentPage() {
                   }}
                 >
                   <Text
-                    fontSize={{ base: 18, lg: 20 }}
+                    fontSize={{ base: "18px", lg: 20 }}
                     fontWeight={700}
                     color={"white"}
                   >
@@ -852,6 +859,7 @@ export default function PaymentPage() {
                   </Text>
                 </Tab>
                 <Tab
+                  flex={1}
                   w="full"
                   _selected={{
                     borderRadius: 16,
@@ -859,15 +867,10 @@ export default function PaymentPage() {
                   }}
                 >
                   <HStack>
-                    <Text
-                      fontSize={{ base: 18, lg: 20 }}
-                      fontWeight={700}
-                      color="white"
-                    >
+                    <Text fontSize={20} fontWeight={700} color="white">
                       Annually
                     </Text>
-                    <Button
-                      variant={"unstyled"}
+                    <Box
                       bgColor={"rgba(68, 87, 66, 0.52)"}
                       fontSize={12}
                       fontWeight={700}
@@ -875,10 +878,14 @@ export default function PaymentPage() {
                       alignItems={"center"}
                       justifyContent={"center"}
                       color="#76F368"
-                      sx={{ width: 100, height: 10, borderRadius: 33 }}
+                      w={"60px"}
+                      h={"30px"}
+                      overflow={"hidden"}
+                      borderRadius={33}
+                      py={3}
                     >
                       20% Off
-                    </Button>
+                    </Box>
                   </HStack>
                 </Tab>
               </TabList>

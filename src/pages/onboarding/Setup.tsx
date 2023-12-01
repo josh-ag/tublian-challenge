@@ -1,7 +1,6 @@
 import {
   Flex,
   Image,
-  Heading,
   HStack,
   Button,
   Stack,
@@ -124,14 +123,14 @@ function CardGroup() {
                 />
                 <VStack align={{ base: "flex-start", lg: "center" }}>
                   <Text
-                    fontSize={{ base: 18, lg: 20, "2xl": 24 }}
+                    fontSize={{ base: 14, lg: 20, "2xl": 24 }}
                     fontWeight={700}
                     color="white"
                   >
                     {card?.heading}
                   </Text>
                   <Text
-                    fontSize={16}
+                    fontSize={{ base: 14, lg: 16 }}
                     fontWeight={500}
                     textOverflow={"wrap"}
                     textAlign={{ base: "left", lg: "center" }}
@@ -176,9 +175,8 @@ function SetUpPage() {
       direction={"column"}
       minH={"100vh"}
       h="full"
-      p={10}
+      p={{ base: 4, lg: 10 }}
       alignItems={"center"}
-      justify={{ md: "flex-start", lg: "space-between" }}
       gap={10}
     >
       {/* @Onboarding3 header  */}
@@ -195,16 +193,14 @@ function SetUpPage() {
             objectFit={"contain"}
             boxSize={"fit-content"}
           />
-          <Heading
+          <Text
             fontFamily={"Recepts"}
             fontWeight={"400"}
             fontSize={13}
-            color={"#FEFEFE"}
-            // lineHeight={18.3}
-            // noOfLines={1}
+            color={"white"}
           >
             TUBLIAN
-          </Heading>
+          </Text>
         </HStack>
 
         <HStack
@@ -231,7 +227,6 @@ function SetUpPage() {
           <Link
             as={RouterLink}
             to="/account/create"
-            // lineHeight={20}
             fontWeight={500}
             fontSize={14}
             size={"sm"}
@@ -244,7 +239,6 @@ function SetUpPage() {
           <Link
             as={RouterLink}
             to="/setup"
-            // lineHeight={20}
             fontWeight={500}
             fontSize={14}
             size={"sm"}
@@ -260,7 +254,6 @@ function SetUpPage() {
           <Link
             as={RouterLink}
             to="/payment"
-            // lineHeight={20}
             fontWeight={500}
             fontSize={14}
             size={"sm"}
@@ -281,12 +274,12 @@ function SetUpPage() {
 
       <VStack
         //@Setup page content
-        spacing={10}
+        spacing={8}
         justifyContent={"center"}
         alignItems={"center"}
         flexWrap={"wrap"}
       >
-        <Stack spacing={4} direction={"column"}>
+        <Stack spacing={2} direction={"column"}>
           <Text
             fontWeight={700}
             fontSize={{ base: 18, lg: 34, "2xl": 36 }}
