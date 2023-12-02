@@ -25,7 +25,6 @@ const breakpoints = {
 const fonts = {
   body: "Space Grotesk Variable",
   heading: "Space Grotesk Variable",
-  // mono: "Menlo, monospace",
 };
 
 // @colors
