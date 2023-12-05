@@ -11,7 +11,7 @@ import {
   chakra,
   useRadioGroup,
   useRadio,
-  useToast,
+  // useToast,
   Link,
 } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
@@ -23,7 +23,7 @@ import recruitingImage from "../../assets/recruitingImage.svg";
 import { RadioType } from "../../type";
 
 function CardGroup() {
-  const toast = useToast();
+  // const toast = useToast();
 
   const cards: RadioType[] = [
     {
@@ -50,17 +50,18 @@ function CardGroup() {
     },
   ];
 
-  const handleChange = (value: string) => {
-    toast({
-      title: `The value got changed to ${value}!`,
-      status: "success",
-      duration: 2000,
-    });
-  };
+  // const handleChange = (value: string) => {
+  //   //Do something
+  //   toast({
+  //     title: `The value got changed to ${value}!`,
+  //     status: "success",
+  //     duration: 2000,
+  //   });
+  // };
 
   const { getRadioProps, getRootProps } = useRadioGroup({
     defaultValue: "team",
-    onChange: handleChange,
+    // onChange: handleChange,
   });
 
   function CustomRadio(props: any) {
@@ -119,9 +120,10 @@ function CardGroup() {
                 <Image
                   src={card.image}
                   objectFit={"cover"}
-                  alignSelf={"center"}
+                  w={{ base: "80%", sm: "60%", md: "60%", lg: "auto" }}
                 />
-                <VStack align={{ base: "flex-start", lg: "center" }}>
+
+                <VStack align={{ base: "flex-start", lg: "center" }} w="full">
                   <Text
                     fontSize={{ base: 14, lg: 20, "2xl": 24 }}
                     fontWeight={700}
@@ -132,7 +134,6 @@ function CardGroup() {
                   <Text
                     fontSize={{ base: 14, lg: 16 }}
                     fontWeight={500}
-                    textOverflow={"wrap"}
                     textAlign={{ base: "left", lg: "center" }}
                   >
                     {card.text}

@@ -16,7 +16,7 @@ import {
   chakra,
   useRadioGroup,
   useRadio,
-  useToast,
+  // useToast,
   Highlight,
   List,
   ListItem,
@@ -57,7 +57,7 @@ import checkMark from "../../assets/check_mark.svg";
 
 //@create checkable card group
 function CardGroup({ modalOpen }: any) {
-  const toast = useToast();
+  // const toast = useToast();
 
   const cards: PaymentType[] = [
     {
@@ -94,17 +94,18 @@ function CardGroup({ modalOpen }: any) {
     },
   ];
 
-  const handleChange = (value: any) => {
-    toast({
-      title: `The value got changed to ${value}!`,
-      status: "success",
-      duration: 2000,
-    });
-  };
+  // const handleChange = (value: any) => {
+  //   //Do something
+  //   toast({
+  //     title: `The value got changed to ${value}!`,
+  //     status: "success",
+  //     duration: 2000,
+  //   });
+  // };
 
   const { getRadioProps, getRootProps } = useRadioGroup({
     defaultValue: "Pro",
-    onChange: handleChange,
+    // onChange: handleChange,
   });
 
   //@create a custom radio button
@@ -251,8 +252,6 @@ function CardGroup({ modalOpen }: any) {
 
 //@Create a button group that act like radio
 function ButtonGroup() {
-  const toast = useToast();
-
   const buttons: ButtonType[] = [
     {
       name: "Card",
@@ -267,17 +266,18 @@ function ButtonGroup() {
     },
   ];
 
-  const handleChange = (value: any) => {
-    toast({
-      title: `The value got changed to ${value}!`,
-      status: "success",
-      duration: 2000,
-    });
-  };
+  // const handleChange = (value: any) => {
+  //   //Do Something
+  //   toast({
+  //     title: `The value got changed to ${value}!`,
+  //     status: "success",
+  //     duration: 2000,
+  //   });
+  // };
 
   const { getRadioProps, getRootProps } = useRadioGroup({
     defaultValue: "Card",
-    onChange: handleChange,
+    // onChange: handleChange,
   });
 
   //@create a custom radio button
