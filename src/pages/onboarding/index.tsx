@@ -9,7 +9,6 @@ import {
   Input,
   Text,
   Link,
-  Container,
 } from "@chakra-ui/react";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import onboardingImg from "../../assets/onboarding_img1.svg";
