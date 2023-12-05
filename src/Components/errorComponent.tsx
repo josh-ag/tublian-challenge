@@ -3,6 +3,7 @@ import { Button, HStack, Heading, Stack, Text } from "@chakra-ui/react";
 
 export const ErrorComponent = () => {
   const navigate = useNavigate();
+  // const error = useRouteError();
 
   return (
     <Stack
@@ -12,12 +13,20 @@ export const ErrorComponent = () => {
       justify={"center"}
       gap={4}
     >
-      <HStack>
+      <HStack flexWrap={"wrap"} align="center" justify="center">
         <Heading>Oops!</Heading>
-        <Text fontSize={14} fontWeight={400}>
+        <Text
+          fontSize={{ base: 14, md: 16 }}
+          fontWeight={400}
+          textAlign={"center"}
+        >
           Something went wrong
         </Text>
       </HStack>
+
+      {/* <Text fontSize={14} fontWeight={700} color="white">
+        Err: {error?.statusText || error?.message}
+      </Text> */}
 
       <Button onClick={() => navigate(-1)} variant={"outline"}>
         Take Me Back

@@ -16,7 +16,6 @@ import {
   chakra,
   useRadioGroup,
   useRadio,
-  // useToast,
   Highlight,
   List,
   ListItem,
@@ -40,13 +39,10 @@ import {
 } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
 import tublianLogo from "../../assets/tublian_logo.svg";
-import { ButtonType, PaymentType } from "../../type";
+import { PaymentType, PlanGroupType, PlanType } from "../../type";
 import { IoIosArrowDown } from "react-icons/io";
 import { CheckCircleIcon } from "@chakra-ui/icons";
 import closeBtn from "../../assets/close_button.svg";
-import cardLogo from "../../assets/card.svg";
-import tickCircle from "../../assets/tick-circle.svg";
-import googlePay from "../../assets/google_pay.svg";
 import lockIcon from "../../assets/lock.svg";
 import logoVisa from "../../assets/logo_visa.svg";
 import logoMaster from "../../assets/logo_master.svg";
@@ -54,77 +50,50 @@ import logoAmex from "../../assets/logo_amex.svg";
 import logoStripe from "../../assets/logo_stripe.svg";
 import bgConfetti from "../../assets/confetti.svg";
 import checkMark from "../../assets/check_mark.svg";
+import { useContext, useMemo, useState } from "react";
+import { AppContext } from "../../contexts/appContext";
 
 //@create checkable card group
-function CardGroup({ modalOpen }: any) {
-  // const toast = useToast();
+function PlansComponent({ plans }: { plans: PlanType[] }) {
+  const [selected, setSelected] = useState("");
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const cards: PaymentType[] = [
-    {
-      type: "Pro",
-      name: "Pro",
-      heading: "$19.99/Month",
-      features: [
-        "Advanced search for developer profiles with filters.",
-        "Increased monthly messages to developers.",
-        "Priority support.",
-      ],
-    },
-    {
-      type: "Business Plan",
-      name: "Business",
-      heading: "$49.99/Month",
-      features: [
-        "Premium access to developer profiles and advanced search filters.",
-        "Increased monthly messages to developers.",
-        "Dedicated account manager for personalized support.",
-        "Early access to new features and updates.",
-      ],
-    },
-    {
-      type: "Enterprise Plan",
-      name: "Enterprise",
-      heading: "Cutom Pricing",
-      features: [
-        "Tailored solutions for large enterprises or agencies.",
-        "Full access to all platform features, including custom integrations.",
-        "Unlimited monthly messages to developers.",
-        "Priority support with 24/7 availability.",
-      ],
-    },
-  ];
+  const handleChange = (value: string) => {
+    //Do something
+    setSelected(value);
+  };
 
-  // const handleChange = (value: any) => {
-  //   //Do something
-  //   toast({
-  //     title: `The value got changed to ${value}!`,
-  //     status: "success",
-  //     duration: 2000,
-  //   });
-  // };
+  const handleModalOpen = () => {
+    onOpen();
+  };
 
   const { getRadioProps, getRootProps } = useRadioGroup({
-    defaultValue: "Pro",
-    // onChange: handleChange,
+    defaultValue: !!selected ? selected : "Pro",
+    onChange: handleChange,
   });
+
+  const isSelectedPlan = useMemo(
+    () => plans.filter((plan) => plan.name === selected),
+    [plans, selected]
+  );
 
   //@create a custom radio button
   function CustomRadio(props: any) {
-    const { card, ...radioProps } = props;
+    const { plan, ...radioProps } = props;
     const { state, getInputProps, getRadioProps, htmlProps } =
       useRadio(radioProps);
 
     const bgGradient =
-      card.name === "Pro"
+      plan.name === "Pro"
         ? "linear(to-b,#855FEF,#5435AA)"
-        : card.name === "Business"
+        : plan.name === "Business"
         ? "linear(to-b,#0881FF,#0B4F95)"
         : "linear(to-b,#068092,#043B43)";
 
     const borderColor =
-      card.name === "Pro"
+      plan.name === "Pro"
         ? "#B29BF3"
-        : card.name === "Business"
+        : plan.name === "Business"
         ? "#79BBFF"
         : "#22BFD6";
 
@@ -151,7 +120,7 @@ function CardGroup({ modalOpen }: any) {
             <VStack justify={"flex-start"} align={"flex-start"} spacing={4}>
               <Box
                 as={Button}
-                w={card.type === "Pro" ? 69 : 160}
+                w={plan.type === "Pro" ? 69 : 160}
                 h={29}
                 variant={"unstyled"}
                 borderRadius={10}
@@ -159,7 +128,7 @@ function CardGroup({ modalOpen }: any) {
                 sx={{ border: `1px solid ${borderColor}` }}
               >
                 <Text fontSize={18} fontWeight={700} color={"#FEFEFE"}>
-                  {card.type}
+                  {plan.type}
                 </Text>
               </Box>
 
@@ -168,7 +137,7 @@ function CardGroup({ modalOpen }: any) {
                   query={"/Month"}
                   styles={{ fontSize: 18, fontWeight: 500, color: "#B7B7B7" }}
                 >
-                  {card.heading}
+                  {plan.heading}
                 </Highlight>
               </Text>
             </VStack>
@@ -181,7 +150,7 @@ function CardGroup({ modalOpen }: any) {
               </Text>
 
               <List spacing={4}>
-                {card.features.map((text: string, index: number) => (
+                {plan.features.map((text: string, index: number) => (
                   <ListItem key={index}>
                     <HStack align={"flex-start"}>
                       <ListIcon
@@ -197,7 +166,7 @@ function CardGroup({ modalOpen }: any) {
                 ))}
               </List>
               <Text fontSize={16} fontWeight={500} textOverflow={"wrap"}>
-                {card.text}
+                {plan?.text}
               </Text>
             </VStack>
           </CardBody>
@@ -207,7 +176,7 @@ function CardGroup({ modalOpen }: any) {
               variant={"unstyled"}
               w={"full"}
               bgColor="brand.800"
-              color={card.name === "Enterprise" ? "#FEFEFE" : "gray.700"}
+              color={plan.name === "Enterprise" ? "#FEFEFE" : "gray.700"}
               rounded={30}
               fontWeight={500}
               fontSize={16}
@@ -215,13 +184,13 @@ function CardGroup({ modalOpen }: any) {
               alignItems={"center"}
               justifyContent={"center"}
               bgGradient={
-                card.name === "Enterprise"
+                plan.name === "Enterprise"
                   ? "linear(to-r,#FBDA61,#FF5ACD 84%)"
                   : ""
               }
-              onClick={modalOpen}
+              onClick={() => handleModalOpen()}
             >
-              {card.name === "Enterprise" ? "Contact Us" : "Subscribe"}
+              {plan.name === "Enterprise" ? "Contact Us" : "Subscribe"}
             </Box>
           </CardFooter>
         </Card>
@@ -230,41 +199,37 @@ function CardGroup({ modalOpen }: any) {
   }
 
   return (
-    <Stack
-      direction={{ base: "column", lg: "row" }}
-      spacing={6}
-      align={"stretch"}
-      {...getRootProps()}
-    >
-      {cards.map((card) => {
-        return (
-          <CustomRadio
-            key={card.name}
-            card={card}
-            image={card.name}
-            {...getRadioProps({ value: card.name })}
-          />
-        );
-      })}
-    </Stack>
+    <>
+      <Stack
+        direction={{ base: "column", lg: "row" }}
+        spacing={6}
+        align={"stretch"}
+        {...getRootProps()}
+      >
+        {plans.map((plan: PlanType) => {
+          return (
+            <CustomRadio
+              key={plan.name}
+              plan={plan}
+              image={plan.name}
+              {...getRadioProps({ value: plan.name })}
+            />
+          );
+        })}
+      </Stack>
+      <ModalComponent
+        isModalOpen={isOpen}
+        onModalClose={onClose}
+        onModalOpen={onOpen}
+        plan={isSelectedPlan[0]}
+      />
+    </>
   );
 }
 
 //@Create a button group that act like radio
-function ButtonGroup() {
-  const buttons: ButtonType[] = [
-    {
-      name: "Card",
-      tick: tickCircle,
-      text: "Card Payment",
-      image: cardLogo,
-    },
-    {
-      name: "Google",
-      tick: tickCircle,
-      image: googlePay,
-    },
-  ];
+function PaymentMethod() {
+  const { paymentMethods } = useContext(AppContext);
 
   // const handleChange = (value: any) => {
   //   //Do Something
@@ -282,7 +247,7 @@ function ButtonGroup() {
 
   //@create a custom radio button
   function CustomRadio(props: any) {
-    const { card, ...radioProps } = props;
+    const { paymentMethod, ...radioProps } = props;
     const { state, getInputProps, getRadioProps, htmlProps } =
       useRadio(radioProps);
 
@@ -315,11 +280,13 @@ function ButtonGroup() {
               bg={"#292929"}
               sx={{ border: `1px solid #414141` }}
             >
-              {state.isChecked && <Image src={card.tick} objectFit={"cover"} />}
+              {state.isChecked && (
+                <Image src={paymentMethod.tick} objectFit={"cover"} />
+              )}
             </Flex>
-            <Image src={card.image} objectFit={"cover"} />
+            <Image src={paymentMethod.image} objectFit={"cover"} />
             <Text fontSize={20} fontWeight={700} color={"#FEFEFE"}>
-              {card?.text}
+              {paymentMethod?.text}
             </Text>
           </HStack>
         </Box>
@@ -328,18 +295,30 @@ function ButtonGroup() {
   }
 
   return (
-    <VStack spacing={2} {...getRootProps()}>
-      {buttons.map((btn) => {
-        return (
-          <CustomRadio
-            key={btn.name}
-            card={btn}
-            image={btn.name}
-            {...getRadioProps({ value: btn.name })}
-          />
-        );
-      })}
-    </VStack>
+    <>
+      <Stack w="full" direction={"column"} spacing={4}>
+        <>
+          <Text fontSize={20} fontWeight={700}>
+            Payment method
+          </Text>
+          <Text fontSize={16} fontWeight={500} color={"#B7B7B7"}>
+            Choose how you'd like to pay
+          </Text>
+        </>
+        <VStack spacing={2} {...getRootProps()}>
+          {paymentMethods.map((paymentMethod: PaymentType) => {
+            return (
+              <CustomRadio
+                key={paymentMethod.name}
+                paymentMethod={paymentMethod}
+                image={paymentMethod.name}
+                {...getRadioProps({ value: paymentMethod.name })}
+              />
+            );
+          })}
+        </VStack>
+      </Stack>
+    </>
   );
 }
 
@@ -347,8 +326,10 @@ function ButtonGroup() {
 export const ModalComponent = ({
   isModalOpen,
   onModalClose,
+  plan,
 }: {
   isModalOpen: boolean;
+  plan: PlanType;
   onModalOpen: () => void;
   onModalClose: () => void;
 }) => {
@@ -359,6 +340,20 @@ export const ModalComponent = ({
 
     onOpen();
   };
+
+  const bgGradient =
+    plan?.name === "Pro"
+      ? "linear(to-b,#855FEF,#5435AA)"
+      : plan?.name === "Business"
+      ? "linear(to-b,#0881FF,#0B4F95)"
+      : "linear(to-b,#068092,#043B43)";
+
+  const borderColor =
+    plan?.name === "Pro"
+      ? "#B29BF3"
+      : plan?.name === "Business"
+      ? "#79BBFF"
+      : "#22BFD6";
 
   return (
     <>
@@ -439,11 +434,11 @@ export const ModalComponent = ({
                       h={29}
                       variant={"unstyled"}
                       borderRadius={10}
-                      bgGradient={"linear(to-b,#0881FF,#0B4F95)"}
-                      sx={{ border: `1px solid #79BBFF` }}
+                      bgGradient={bgGradient}
+                      sx={{ border: `1px solid ${borderColor}` }}
                     >
                       <Text fontSize={18} fontWeight={700} color={"white"}>
-                        Business Plan
+                        {plan?.name || "Pro"}
                       </Text>
                     </Box>
 
@@ -468,18 +463,7 @@ export const ModalComponent = ({
                 </CardBody>
               </Card>
 
-              <Stack w="full" direction={"column"} spacing={4}>
-                <>
-                  <Text fontSize={20} fontWeight={700}>
-                    Payment method
-                  </Text>
-                  <Text fontSize={16} fontWeight={500} color={"#B7B7B7"}>
-                    Choose how you'd like to pay
-                  </Text>
-                </>
-
-                <ButtonGroup />
-              </Stack>
+              <PaymentMethod />
 
               <FormControl w={"full"}>
                 <VStack
@@ -692,9 +676,110 @@ export const ModalComponent = ({
   );
 };
 
+const SubscriptionComponent = () => {
+  const { planGroups } = useContext(AppContext);
+
+  return (
+    <VStack
+      //@Setup page content
+      spacing={10}
+      justifyContent={"center"}
+      alignItems={"center"}
+    >
+      <VStack spacing={4}>
+        <Text
+          fontWeight={700}
+          fontSize={{ base: 18, lg: 34, "2xl": 36 }}
+          color={"white"}
+          textAlign={"center"}
+        >
+          Payment Plan
+        </Text>
+        <Text
+          fontSize={{ base: 14, lg: 16 }}
+          fontWeight={500}
+          color={"#CFCFCF"}
+          textAlign={"center"}
+        >
+          We will customize your experience based on your option.
+        </Text>
+      </VStack>
+
+      <Tabs
+        variant="outline"
+        bgColor={"gray.800"}
+        w={"auto"}
+        h={"auto"}
+        rounded={20}
+        size={"md"}
+        isFitted={true}
+      >
+        <VStack mb={6}>
+          <TabList
+            bgColor={"#1E1E1E"}
+            sx={{ border: "1px solid #292929", padding: 0.4 }}
+            rounded={20}
+            p={2}
+            w={{ base: "full", lg: "md" }}
+            alignSelf={"center"}
+            display={"flex"}
+          >
+            {planGroups.map((planGroup: PlanGroupType) => (
+              <Tab
+                key={planGroup.type}
+                flex={1}
+                w="full"
+                _selected={{
+                  borderRadius: 16,
+                  bgGradient: "linear(to-r, #FBDA61,#FF5ACD 84%)",
+                }}
+              >
+                <HStack>
+                  <Text fontSize={20} fontWeight={700} color="white">
+                    {planGroup.type}
+                  </Text>
+                  {planGroup.type === "Annually" && (
+                    <Box
+                      bgColor={"rgba(68, 87, 66, 0.52)"}
+                      fontSize={12}
+                      fontWeight={700}
+                      display="flex"
+                      alignItems={"center"}
+                      justifyContent={"center"}
+                      color="#76F368"
+                      w={"60px"}
+                      h={"30px"}
+                      overflow={"hidden"}
+                      borderRadius={33}
+                      py={3}
+                    >
+                      20% Off
+                    </Box>
+                  )}
+                </HStack>
+              </Tab>
+            ))}
+          </TabList>
+        </VStack>
+        <TabPanels w="full" bg={"gray.800"}>
+          {planGroups.map((planGroup: PlanGroupType) => {
+            return (
+              <TabPanel key={planGroup.type}>
+                <Stack direction={{ base: "column", lg: "row" }} spacing={4}>
+                  <PlansComponent plans={planGroup.plans} />
+                </Stack>
+              </TabPanel>
+            );
+          })}
+        </TabPanels>
+      </Tabs>
+    </VStack>
+  );
+};
+
 // @PAYMENT PAGE
 export default function PaymentPage() {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  // const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <>
@@ -798,108 +883,7 @@ export default function PaymentPage() {
           </HStack>
         </HStack>
 
-        <VStack
-          //@Setup page content
-          spacing={10}
-          justifyContent={"center"}
-          alignItems={"center"}
-        >
-          <VStack spacing={4}>
-            <Text
-              fontWeight={700}
-              fontSize={{ base: 18, lg: 34, "2xl": 36 }}
-              color={"white"}
-              textAlign={"center"}
-            >
-              Payment Plan
-            </Text>
-            <Text
-              fontSize={{ base: 14, lg: 16 }}
-              fontWeight={500}
-              color={"#CFCFCF"}
-              textAlign={"center"}
-            >
-              We will customize your experience based on your option.
-            </Text>
-          </VStack>
-
-          <Tabs
-            variant="outline"
-            bgColor={"gray.800"}
-            w={"auto"}
-            h={"auto"}
-            rounded={20}
-            size={"md"}
-            isFitted={true}
-          >
-            <VStack mb={6}>
-              <TabList
-                bgColor={"#1E1E1E"}
-                sx={{ border: "1px solid #292929", padding: 0.4 }}
-                rounded={20}
-                p={1}
-                w={{ base: "full", lg: "md" }}
-                alignSelf={"center"}
-                display={"flex"}
-              >
-                <Tab
-                  flex={1}
-                  w="full"
-                  _selected={{
-                    borderRadius: 16,
-                    bgGradient: "linear(to-r, #FBDA61,#FF5ACD 84%)",
-                  }}
-                >
-                  <Text
-                    fontSize={{ base: "18px", lg: 20 }}
-                    fontWeight={700}
-                    color={"white"}
-                  >
-                    Monthly
-                  </Text>
-                </Tab>
-                <Tab
-                  flex={1}
-                  w="full"
-                  _selected={{
-                    borderRadius: 16,
-                    bgGradient: "linear(to-r, #FBDA61,#FF5ACD 84%)",
-                  }}
-                >
-                  <HStack>
-                    <Text fontSize={20} fontWeight={700} color="white">
-                      Annually
-                    </Text>
-                    <Box
-                      bgColor={"rgba(68, 87, 66, 0.52)"}
-                      fontSize={12}
-                      fontWeight={700}
-                      display="flex"
-                      alignItems={"center"}
-                      justifyContent={"center"}
-                      color="#76F368"
-                      w={"60px"}
-                      h={"30px"}
-                      overflow={"hidden"}
-                      borderRadius={33}
-                      py={3}
-                    >
-                      20% Off
-                    </Box>
-                  </HStack>
-                </Tab>
-              </TabList>
-            </VStack>
-            <TabPanels w="full" bg={"gray.800"}>
-              <TabPanel>
-                <CardGroup modalOpen={onOpen} />
-              </TabPanel>
-              <TabPanel>
-                <CardGroup modalOpen={onOpen} />
-              </TabPanel>
-            </TabPanels>
-          </Tabs>
-        </VStack>
+        <SubscriptionComponent />
 
         {/* @footer */}
         <HStack spacing={4}>
@@ -912,11 +896,11 @@ export default function PaymentPage() {
         </HStack>
       </Flex>
       {/* @Payment Modal */}
-      <ModalComponent
+      {/* <ModalComponent
         isModalOpen={isOpen}
         onModalClose={onClose}
         onModalOpen={onOpen}
-      />
+      /> */}
     </>
   );
 }

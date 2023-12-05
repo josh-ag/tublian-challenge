@@ -9,14 +9,44 @@ import {
   Input,
   Text,
   Link,
+  useToast,
 } from "@chakra-ui/react";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import onboardingImg from "../../assets/onboarding_img1.svg";
 import tublianLogo from "../../assets/tublian_logo.svg";
+import { useContext, useState } from "react";
+import { AppContext } from "../../contexts/appContext";
 
 // @Onboarding page1
 export default function () {
+  const [firstname, setFirstname] = useState("");
+  const [lastname, setLastname] = useState("");
+
+  const { login } = useContext(AppContext);
   const navigate = useNavigate();
+  const toast = useToast();
+
+  //@handle login
+  const handleLogin = async () => {
+    if (!firstname || !lastname) {
+      return toast({
+        title: "First and Last Name is marked required.",
+        status: "error",
+      });
+    }
+
+    try {
+      const res = await login({ firstname, lastname });
+      if (res.statusCode == 200) {
+        //@success
+        console.log(res);
+
+        return navigate("/account/create");
+      }
+    } catch (err) {
+      throw err;
+    }
+  };
 
   return (
     <Flex w={"full"} minH={"100vh"} h="full">
@@ -149,6 +179,8 @@ export default function () {
                 Start recruiting streetcred developers, Today!!
               </Text>
               <Input
+                defaultValue={firstname}
+                onChange={(e) => setFirstname(e.target.value)}
                 type="firstname"
                 placeholder="First Name"
                 variant={"flushed"}
@@ -160,6 +192,8 @@ export default function () {
                 borderColor={"#888888"}
               />
               <Input
+                defaultValue={lastname}
+                onChange={(e) => setLastname(e.target.value)}
                 type="lastname"
                 placeholder="Last Name"
                 variant={"flushed"}
@@ -178,7 +212,7 @@ export default function () {
                 rounded={30}
                 fontWeight={500}
                 size={"lg"}
-                onClick={() => navigate("/account/create")}
+                onClick={handleLogin}
               >
                 Proceed
               </Button>

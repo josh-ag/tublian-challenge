@@ -1,3 +1,4 @@
+import { useContext } from "react";
 import {
   Flex,
   Image,
@@ -11,44 +12,15 @@ import {
   chakra,
   useRadioGroup,
   useRadio,
-  // useToast,
   Link,
 } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
 import tublianLogo from "../../assets/tublian_logo.svg";
-import tickCircle from "../../assets/tick-circle.svg";
-import teamProjectImage from "../../assets/team_project_card1.svg";
-import personalProjectImage from "../../assets/personalProjectImage.svg";
-import recruitingImage from "../../assets/recruitingImage.svg";
-import { RadioType } from "../../type";
+import { UsageType } from "../../type";
+import { AppContext } from "../../contexts/appContext";
 
-function CardGroup() {
-  // const toast = useToast();
-
-  const cards: RadioType[] = [
-    {
-      name: "team",
-      tick: tickCircle,
-      image: teamProjectImage,
-      heading: "Team Projects",
-      text: "Hire developer for team projects",
-    },
-    {
-      name: "personal",
-      tick: tickCircle,
-      image: personalProjectImage,
-      heading: "Personal Project",
-      text: "Hire developer for personal projects",
-    },
-
-    {
-      name: "recruiting",
-      tick: tickCircle,
-      heading: "Recruiting",
-      image: recruitingImage,
-      text: "Recruit developer for outstanding companies",
-    },
-  ];
+function UsageGroup() {
+  const { usages } = useContext(AppContext);
 
   // const handleChange = (value: string) => {
   //   //Do something
@@ -65,7 +37,7 @@ function CardGroup() {
   });
 
   function CustomRadio(props: any) {
-    const { card, ...radioProps } = props;
+    const { usage, ...radioProps } = props;
     const { state, getInputProps, getRadioProps, htmlProps, getLabelProps } =
       useRadio(radioProps);
 
@@ -103,7 +75,7 @@ function CardGroup() {
               >
                 {state.isChecked ? (
                   <Image
-                    src={card.tick}
+                    src={usage.tick}
                     objectFit={"cover"}
                     rounded="full"
                     {...getLabelProps()}
@@ -118,7 +90,7 @@ function CardGroup() {
                 spacing={4}
               >
                 <Image
-                  src={card.image}
+                  src={usage.image}
                   objectFit={"cover"}
                   w={{ base: "80%", sm: "60%", md: "60%", lg: "auto" }}
                 />
@@ -129,14 +101,14 @@ function CardGroup() {
                     fontWeight={700}
                     color="white"
                   >
-                    {card?.heading}
+                    {usage?.heading}
                   </Text>
                   <Text
                     fontSize={{ base: 14, lg: 16 }}
                     fontWeight={500}
                     textAlign={{ base: "left", lg: "center" }}
                   >
-                    {card.text}
+                    {usage?.text}
                   </Text>
                 </VStack>
               </Stack>
@@ -154,16 +126,14 @@ function CardGroup() {
       align={"stretch"}
       {...getRootProps()}
     >
-      {cards.map((card) => {
-        return (
-          <CustomRadio
-            key={card.name}
-            card={card}
-            image={card.tick}
-            {...getRadioProps({ value: card.name })}
-          />
-        );
-      })}
+      {usages.map((usage: UsageType) => (
+        <CustomRadio
+          key={usage?.name}
+          usage={usage}
+          image={usage?.tick}
+          {...getRadioProps({ value: usage?.name })}
+        />
+      ))}
     </Stack>
   );
 }
@@ -300,7 +270,7 @@ function SetUpPage() {
           </Text>
         </Stack>
 
-        <CardGroup />
+        <UsageGroup />
 
         <Button
           //@Submit button

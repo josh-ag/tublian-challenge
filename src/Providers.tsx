@@ -5,6 +5,7 @@ import {
 } from "@chakra-ui/react";
 import { RouterProvider } from "react-router-dom";
 import { Router } from "./routes/router";
+import { AppContextProvider } from "./contexts/appContext";
 
 // Extend theme
 const config: ThemeConfig = {
@@ -47,8 +48,10 @@ export const ThemeProvider = ({ children }: any) => (
 
 export const Providers = () => {
   return (
-    <ThemeProvider>
-      <RouterProvider router={Router} />
-    </ThemeProvider>
+    <AppContextProvider>
+      <ThemeProvider>
+        <RouterProvider router={Router} />
+      </ThemeProvider>
+    </AppContextProvider>
   );
 };
