@@ -83,7 +83,7 @@ function UsageGroup() {
                 <Image
                   src={usage.image}
                   objectFit={"cover"}
-                  w={{ base: "70%", sm: "60%", md: "60%", lg: "auto" }}
+                  w={{ base: "60%", sm: "60%", md: "60%", lg: "auto" }}
                 />
 
                 <VStack align={{ base: "flex-start", lg: "center" }} w="full">
