@@ -22,15 +22,6 @@ import { AppContext } from "../../contexts/appContext";
 function UsageGroup() {
   const { usages } = useContext(AppContext);
 
-  // const handleChange = (value: string) => {
-  //   //Do something
-  //   toast({
-  //     title: `The value got changed to ${value}!`,
-  //     status: "success",
-  //     duration: 2000,
-  //   });
-  // };
-
   const { getRadioProps, getRootProps } = useRadioGroup({
     defaultValue: "team",
     // onChange: handleChange,
@@ -92,7 +83,7 @@ function UsageGroup() {
                 <Image
                   src={usage.image}
                   objectFit={"cover"}
-                  w={{ base: "80%", sm: "60%", md: "60%", lg: "auto" }}
+                  w={{ base: "70%", sm: "60%", md: "60%", lg: "auto" }}
                 />
 
                 <VStack align={{ base: "flex-start", lg: "center" }} w="full">
@@ -104,9 +95,10 @@ function UsageGroup() {
                     {usage?.heading}
                   </Text>
                   <Text
+                    textAlign={{ base: "left", lg: "center" }}
                     fontSize={{ base: 14, lg: 16 }}
                     fontWeight={500}
-                    textAlign={{ base: "left", lg: "center" }}
+                    color={"#CFCFCF"}
                   >
                     {usage?.text}
                   </Text>
@@ -120,21 +112,41 @@ function UsageGroup() {
   }
 
   return (
-    <Stack
-      direction={{ base: "column", lg: "row" }}
-      spacing={6}
-      align={"stretch"}
-      {...getRootProps()}
-    >
-      {usages.map((usage: UsageType) => (
-        <CustomRadio
-          key={usage?.name}
-          usage={usage}
-          image={usage?.tick}
-          {...getRadioProps({ value: usage?.name })}
-        />
-      ))}
-    </Stack>
+    <>
+      <Stack spacing={2} direction={"column"}>
+        <Text
+          fontWeight={700}
+          fontSize={{ base: 18, lg: 34, "2xl": 36 }}
+          textAlign={"center"}
+          color={"white"}
+        >
+          How are you planning to use Tublian?
+        </Text>
+        <Text
+          textAlign={"center"}
+          fontSize={{ base: 14, lg: 16 }}
+          fontWeight={500}
+          color={"#CFCFCF"}
+        >
+          We will customize your experience based on your option.
+        </Text>
+      </Stack>
+      <Stack
+        direction={{ base: "column", lg: "row" }}
+        spacing={6}
+        align={"stretch"}
+        {...getRootProps()}
+      >
+        {usages.map((usage: UsageType) => (
+          <CustomRadio
+            key={usage?.name}
+            usage={usage}
+            image={usage?.tick}
+            {...getRadioProps({ value: usage?.name })}
+          />
+        ))}
+      </Stack>
+    </>
   );
 }
 
@@ -250,26 +262,6 @@ function SetUpPage() {
         alignItems={"center"}
         flexWrap={"wrap"}
       >
-        <Stack spacing={2} direction={"column"}>
-          <Text
-            fontWeight={700}
-            fontSize={{ base: 18, lg: 34, "2xl": 36 }}
-            textAlign={"center"}
-            color={"white"}
-          >
-            How are you planning to use Tublian?
-          </Text>
-          <Text
-            textAlign={"center"}
-            fontSize={{ base: 14, lg: 16 }}
-            fontWeight={500}
-            color={"#CFCFCF"}
-            sx={{ overflow: "visible" }}
-          >
-            We will customize your experience based on your option.
-          </Text>
-        </Stack>
-
         <UsageGroup />
 
         <Button

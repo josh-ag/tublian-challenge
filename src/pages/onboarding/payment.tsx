@@ -55,7 +55,7 @@ import { AppContext } from "../../contexts/appContext";
 
 //@create checkable card group
 function PlansComponent({ plans }: { plans: PlanType[] }) {
-  const [selected, setSelected] = useState("");
+  const [selected, setSelected] = useState("Pro");
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const handleChange = (value: string) => {
@@ -429,8 +429,8 @@ export const ModalComponent = ({
                   >
                     <Box
                       as={Button}
-                      // w={card.type === "Pro" ? 69 : 160}
-                      w={169}
+                      w={plan?.type === "Pro" ? 69 : 160}
+                      // w={169}
                       h={29}
                       variant={"unstyled"}
                       borderRadius={10}
@@ -438,7 +438,7 @@ export const ModalComponent = ({
                       sx={{ border: `1px solid ${borderColor}` }}
                     >
                       <Text fontSize={18} fontWeight={700} color={"white"}>
-                        {plan?.name || "Pro"}
+                        {plan?.name}
                       </Text>
                     </Box>
 
@@ -448,14 +448,17 @@ export const ModalComponent = ({
                       </Text>
                       <Text fontSize={18} fontWeight={500} color={"#B7B7B7"}>
                         <Highlight
-                          query={"$49.99"}
+                          query={["$49.99", "$19.99", "Cutom Pricing"]}
                           styles={{
                             fontSize: 30,
                             fontWeight: 700,
                             color: "white",
                           }}
                         >
-                          usd $49.99/Month
+                          {plan?.name === "Enterprise"
+                            ? plan?.heading
+                            : `usd ${plan?.heading}`}
+                          {/* usd $49.99/Month */}
                         </Highlight>
                       </Text>
                     </HStack>
