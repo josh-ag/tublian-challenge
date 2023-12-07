@@ -19,8 +19,9 @@ import { AppContext } from "../../contexts/appContext";
 
 // @Onboarding page1
 export default function () {
-  const [firstname, setFirstname] = useState("");
-  const [lastname, setLastname] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const { login } = useContext(AppContext);
   const navigate = useNavigate();
@@ -28,7 +29,9 @@ export default function () {
 
   //@handle login
   const handleLogin = async () => {
-    if (!firstname || !lastname) {
+    setIsLoading(true);
+    if (!email || !password) {
+      setIsLoading(false);
       return toast({
         title: "First and Last Name is marked required.",
         status: "error",
@@ -36,13 +39,27 @@ export default function () {
     }
 
     try {
-      const res = await login({ firstname, lastname });
-      if (res.statusCode == 200) {
-        //@success
-        console.log(res);
-
-        return navigate("/account/create");
+      const resp = await login({ email, password });
+      if (resp?.status === 500 || resp?.status === 501) {
+        //@fetch response
+        setIsLoading(false);
+        return toast({ title: resp?.statusText, status: "error" });
       }
+
+      const res = await resp.json();
+      if (res.statusCode !== 200) {
+        //@login failed
+        setIsLoading(false);
+        return toast({ title: res.msg, status: "error" });
+      }
+
+      //store token
+      localStorage.setItem("_token", res?.user?.token);
+
+      //@login succeeded
+      setIsLoading(false);
+      toast({ title: res.msg, status: "success" });
+      return navigate("/setup");
     } catch (err) {
       throw err;
     }
@@ -179,10 +196,10 @@ export default function () {
                 Start recruiting streetcred developers, Today!!
               </Text>
               <Input
-                defaultValue={firstname}
-                onChange={(e) => setFirstname(e.target.value)}
-                type="firstname"
-                placeholder="First Name"
+                defaultValue={email}
+                onChange={(e) => setEmail(e.target.value)}
+                type="email"
+                placeholder="Email"
                 variant={"flushed"}
                 fontSize={16}
                 fontWeight={500}
@@ -192,10 +209,10 @@ export default function () {
                 borderColor={"#888888"}
               />
               <Input
-                defaultValue={lastname}
-                onChange={(e) => setLastname(e.target.value)}
-                type="lastname"
-                placeholder="Last Name"
+                defaultValue={password}
+                onChange={(e) => setPassword(e.target.value)}
+                type="password"
+                placeholder="Pasword"
                 variant={"flushed"}
                 fontSize={16}
                 fontWeight={500}
@@ -205,7 +222,11 @@ export default function () {
               />
 
               <Button
-                variant={"unstyled"}
+                variant={isLoading ? "solid" : "unstyled"}
+                colorScheme={isLoading ? "gray" : "none"}
+                isLoading={isLoading}
+                loadingText={"Processing"}
+                disabled={isLoading ? true : false}
                 w="100%"
                 bgColor="brand.800"
                 color={"gray.700"}

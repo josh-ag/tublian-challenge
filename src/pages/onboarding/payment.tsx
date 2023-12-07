@@ -36,8 +36,9 @@ import {
   InputLeftElement,
   InputRightElement,
   Link,
+  useToast,
 } from "@chakra-ui/react";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 import tublianLogo from "../../assets/tublian_logo.svg";
 import { PaymentType, PlanGroupType, PlanType } from "../../type";
 import { IoIosArrowDown } from "react-icons/io";
@@ -333,11 +334,56 @@ export const ModalComponent = ({
   onModalOpen: () => void;
   onModalClose: () => void;
 }) => {
+  const [email, setEmail] = useState<string>("");
+  const [number, setNumber] = useState<string>("");
+  const [cvv, setCvv] = useState<string>("");
+  const [name, setName] = useState<string>("");
+  const [date, setDate] = useState<string>("");
+  const [country, setCountry] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const { pay } = useContext(AppContext);
+  const toast = useToast();
+  const navigate = useNavigate();
+
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const handlePayment = () => {
-    onModalClose();
+  const handlePayment = async () => {
+    setIsLoading(true);
+    if (!email || !name || !country || !cvv || !number || !date) {
+      setIsLoading(false);
+      return toast({ title: "Some fields are missing", status: "error" });
+    }
 
+    const paymentData = {
+      email,
+      cvv,
+      country,
+      number,
+      expiry_date: date,
+      holder_name: name,
+      amount: plan?.amount,
+    };
+
+    const resp = await pay(paymentData);
+
+    if (resp.status === 401) {
+      //@payment failure response
+      setIsLoading(false);
+      toast({ title: resp?.statusText, status: "error" });
+      return navigate("/");
+    }
+
+    const res = await resp.json();
+    if (res.statusCode !== 200) {
+      setIsLoading(false);
+      //@payment failure response
+      return toast({ title: res.msg, status: "error" });
+    }
+
+    //@next
+    setIsLoading(false);
+    onModalClose();
     onOpen();
   };
 
@@ -458,7 +504,6 @@ export const ModalComponent = ({
                           {plan?.name === "Enterprise"
                             ? plan?.heading
                             : `usd ${plan?.heading}`}
-                          {/* usd $49.99/Month */}
                         </Highlight>
                       </Text>
                     </HStack>
@@ -480,6 +525,9 @@ export const ModalComponent = ({
                   </Text>
                   <Input
                     type="email"
+                    name="email"
+                    defaultValue={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     placeholder="Email"
                     variant={"flushed"}
                     fontSize={16}
@@ -492,6 +540,9 @@ export const ModalComponent = ({
                   />
                   <Input
                     type="holder"
+                    name="name"
+                    defaultValue={name}
+                    onChange={(e) => setName(e.target.value)}
                     placeholder="Card Holder"
                     variant={"flushed"}
                     fontSize={16}
@@ -508,6 +559,9 @@ export const ModalComponent = ({
                     </InputLeftElement>
                     <Input
                       type="holder"
+                      name="number"
+                      defaultValue={number}
+                      onChange={(e) => setNumber(e.target.value)}
                       placeholder="Card Number"
                       variant={"flushed"}
                       fontSize={16}
@@ -529,6 +583,9 @@ export const ModalComponent = ({
                   </InputGroup>
                   <HStack>
                     <Input
+                      name="date"
+                      defaultValue={date}
+                      onChange={(e) => setDate(e.target.value)}
                       type="mm/yy"
                       placeholder="MM/YY"
                       variant={"flushed"}
@@ -542,6 +599,9 @@ export const ModalComponent = ({
                     />
                     <Input
                       type="cvv"
+                      name="cvv"
+                      defaultValue={cvv}
+                      onChange={(e) => setCvv(e.target.value)}
                       placeholder="CVV"
                       variant={"flushed"}
                       fontSize={16}
@@ -556,7 +616,10 @@ export const ModalComponent = ({
 
                   <InputGroup>
                     <Input
-                      type="cvv"
+                      type="country"
+                      name="country"
+                      defaultValue={country}
+                      onChange={(e) => setCountry(e.target.value)}
                       placeholder="Country"
                       variant={"flushed"}
                       fontSize={16}
@@ -590,16 +653,20 @@ export const ModalComponent = ({
 
               <Button
                 //@Submit button
-                variant={"unstyled"}
+                variant={isLoading ? "solid" : "unstyled"}
+                colorScheme={isLoading ? "gray" : "none"}
+                isLoading={isLoading}
+                loadingText={"Processing"}
+                disabled={isLoading ? true : false}
                 w="100%"
-                bgColor="brand.800"
+                bgColor={"brand.800"}
                 color={"gray.700"}
                 rounded={30}
                 fontWeight={500}
                 size="lg"
                 onClick={handlePayment}
               >
-                Pay $49.99
+                Pay {plan?.amount}
               </Button>
             </VStack>
           </ModalBody>
@@ -627,7 +694,6 @@ export const ModalComponent = ({
             w="full"
             p={4}
             backgroundImage={bgConfetti}
-            // justify={"center"}
             align={"center"}
           >
             <HStack cursor={"pointer"} alignSelf={"flex-start"}>

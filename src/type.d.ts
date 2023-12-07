@@ -3,6 +3,15 @@ export type LoginType = {
   password: string;
 };
 
+export type PaymentDetailType = {
+  email: string;
+  cvv: string;
+  number: string;
+  holdder_name: string;
+  expiry_date: string;
+  amount: string;
+};
+
 export type PaymentType = {
   tick: string;
   text?: string;
@@ -14,6 +23,7 @@ export type PlanType = {
   type: string;
   name: string;
   heading: string;
+  amount?: string;
   features: string[];
 };
 
@@ -32,9 +42,10 @@ export type UsageType = {
 
 export interface AppContextInterface {
   login?: Promise;
-  createAccount?: Promise;
+  register?: Promise;
   usages: UsageType[];
   plans: PlanType[];
   planGroups: PlanGroupType[];
   paymentMethods: PaymentType[];
+  pay: Promise;
 }

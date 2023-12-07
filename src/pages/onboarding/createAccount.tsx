@@ -13,19 +13,61 @@ import {
   Checkbox,
   Divider,
   Link,
+  useToast,
 } from "@chakra-ui/react";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import onboardingImg2 from "../../assets/onboarding_img2.svg";
 import tublianLogo from "../../assets/tublian_logo.svg";
 import logoGoogle from "../../assets/icon_google.svg";
+import { useContext, useState } from "react";
+import { AppContext } from "../../contexts/appContext";
 
 // @Onboarding page2
 export default function CreateAccountPage() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const { register } = useContext(AppContext);
   const navigate = useNavigate();
+  const toast = useToast();
+
+  const handleRegister = async () => {
+    setIsLoading(true);
+    if (!email || !password) {
+      setIsLoading(false);
+      return toast({
+        title: "Email and Password field is marked required",
+        status: "error",
+      });
+    }
+
+    //@register user
+    const resp = await register({ email, password });
+    console.log(resp);
+
+    if (resp?.status === 500 || resp?.status === 501) {
+      //@reg failed
+      setIsLoading(false);
+      return toast({ title: resp?.statusText, status: "error" });
+    }
+
+    const res = await resp.json();
+
+    if (res.statusCode !== 200) {
+      //@reg failed
+      setIsLoading(false);
+      return toast({ title: res.msg, status: "error" });
+    }
+
+    //@registration succeeded
+    setIsLoading(false);
+    toast({ title: res.msg, status: "success" });
+    return navigate("/");
+  };
 
   return (
     <Flex w={"full"} minH={"100vh"} h={"full"} pos={"relative"}>
-      {/*@onboarding2 image container */}
       <Box
         flex={1}
         h={"100vh"}
@@ -161,6 +203,8 @@ export default function CreateAccountPage() {
               </Text>
 
               <Input
+                defaultValue={email}
+                onChange={(e) => setEmail(e.target.value)}
                 type="email"
                 placeholder="Email"
                 variant={"flushed"}
@@ -172,6 +216,8 @@ export default function CreateAccountPage() {
                 borderColor={"#888888"}
               />
               <Input
+                defaultValue={password}
+                onChange={(e) => setPassword(e.target.value)}
                 type="password"
                 placeholder="Password"
                 variant={"flushed"}
@@ -199,15 +245,18 @@ export default function CreateAccountPage() {
               </Stack>
               <VStack w="full" spacing={6}>
                 <Button
-                  //@Submit button
-                  variant={"unstyled"}
+                  variant={isLoading ? "solid" : "unstyled"}
+                  colorScheme={isLoading ? "gray" : "none"}
+                  isLoading={isLoading}
+                  loadingText={"Processing"}
+                  disabled={isLoading ? true : false}
                   w="100%"
                   bgColor="brand.800"
                   color={"gray.700"}
                   rounded={30}
                   fontWeight={500}
                   size="lg"
-                  onClick={() => navigate("/setup")}
+                  onClick={handleRegister}
                 >
                   Create Account
                 </Button>
@@ -221,7 +270,6 @@ export default function CreateAccountPage() {
                 </HStack>
 
                 <Box
-                  // @Sign-in with google button
                   as={Button}
                   variant="unstyled"
                   w="full"

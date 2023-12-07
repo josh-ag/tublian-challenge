@@ -2,6 +2,7 @@ import React, { createContext } from "react";
 import {
   AppContextInterface,
   LoginType,
+  PaymentDetailType,
   PaymentType,
   PlanGroupType,
   PlanType,
@@ -56,6 +57,7 @@ const planTypes = [
     type: "Pro",
     name: "Pro",
     heading: "$19.99/Month",
+    amount: "$19.99",
     features: [
       "Advanced search for developer profiles with filters.",
       "Increased monthly messages to developers.",
@@ -66,6 +68,7 @@ const planTypes = [
     type: "Business Plan",
     name: "Business",
     heading: "$49.99/Month",
+    amount: "$49.99",
     features: [
       "Premium access to developer profiles and advanced search filters.",
       "Increased monthly messages to developers.",
@@ -77,6 +80,7 @@ const planTypes = [
     type: "Enterprise Plan",
     name: "Enterprise",
     heading: "Cutom Pricing",
+    amount: "Custom Pricing",
     features: [
       "Tailored solutions for large enterprises or agencies.",
       "Full access to all platform features, including custom integrations.",
@@ -117,41 +121,50 @@ export const AppContextProvider = ({
   //@login user
   const login = async (loginData: LoginType) => {
     try {
-      const loginResp = await fetch("/api/login", {
+      const resp = await fetch("/api/login", {
+        method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(loginData),
-        method: "POST",
       });
 
-      const res = await loginResp.json();
-
-      return res;
+      return resp;
     } catch (err) {
       throw err;
     }
   };
 
-  const createAccount = async (data: LoginType) => {
-    if (data) {
-      return console.log(data);
-    }
-
+  const register = async (data: LoginType) => {
     try {
       const resp = await fetch("/api/account/create", {
+        headers: { "Content-Type": "application/json" },
+        method: "POST",
         body: JSON.stringify(data),
       });
 
-      const res = await resp.json();
-
-      if (res?.statusCode == 200) {
-        //@success resp
-        return console.log(res.body);
-      }
-
-      //@fail reason
-      console.log(res.error);
+      return resp;
     } catch (err) {
-      console.log(err);
+      throw err;
+    }
+  };
+
+  const pay = async (paymentDetail: PaymentDetailType) => {
+    //@get auth token
+    const token = localStorage.getItem("_token");
+
+    try {
+      const resp = await fetch("/api/pay", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(paymentDetail),
+      });
+
+      return resp;
+    } catch (err) {
+      throw err;
     }
   };
 
@@ -159,11 +172,12 @@ export const AppContextProvider = ({
     <AppContext.Provider
       value={{
         login,
-        createAccount,
+        register,
         usages,
         plans,
         paymentMethods,
         planGroups,
+        pay,
       }}
     >
       {children}
