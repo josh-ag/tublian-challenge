@@ -137,7 +137,7 @@ export const AppContextProvider = ({
 
   const register = async (data: LoginType) => {
     try {
-      const resp = await fetch("/api/account/create", {
+      const resp = await fetch(`${baseUrl}/account/create`, {
         headers: { "Content-Type": "application/json" },
         method: "POST",
         mode: "cors",
@@ -155,7 +155,7 @@ export const AppContextProvider = ({
     const token = localStorage.getItem("_token");
 
     try {
-      const resp = await fetch("/api/pay", {
+      const resp = await fetch(`${baseUrl}/pay`, {
         method: "POST",
         credentials: "include",
         mode: "cors",

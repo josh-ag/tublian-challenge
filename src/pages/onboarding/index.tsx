@@ -41,8 +41,14 @@ export default function () {
     try {
       const resp = await login({ email, password });
 
+      if (resp?.status === 500 || (resp?.status === 401 && resp.statusText)) {
+        //@reg failed
+        setIsLoading(false);
+        return toast({ title: resp?.statusText, status: "error" });
+      }
+
       const res = await resp.json();
-      if (res.statusCode !== 200) {
+      if (res?.statusCode !== 200) {
         //@login failed
         setIsLoading(false);
         return toast({ title: res.msg, status: "error" });

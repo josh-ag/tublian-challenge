@@ -366,19 +366,18 @@ export const ModalComponent = ({
     };
 
     const resp = await pay(paymentData);
-
-    if (resp?.status === 500 || resp?.status === 401 || resp?.status === 501) {
-      //@payment failure response
+    if (resp?.status === 500 || (resp?.status === 401 && resp.statusText)) {
+      //@reg failed
       setIsLoading(false);
-      toast({ title: resp?.statusText, status: "error" });
-      return navigate("/");
+      return toast({ title: resp?.statusText, status: "error" });
     }
 
     const res = await resp.json();
+
     if (res.statusCode !== 200) {
       setIsLoading(false);
       //@payment failure response
-      return toast({ title: res.msg, status: "error" });
+      return toast({ title: res?.msg, status: "error" });
     }
 
     //@next
