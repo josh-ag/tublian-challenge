@@ -14,7 +14,7 @@ import tickCircle from "../assets/tick-circle.svg";
 import teamProjectImage from "../assets/team_project_card1.svg";
 import personalProjectImage from "../assets/personalProjectImage.svg";
 import recruitingImage from "../assets/recruitingImage.svg";
-const baseUrl = "https://tublian-challenge.onrender.com";
+const baseUrl = "https://tublian-challenge.onrender.com/api";
 
 export const AppContext = createContext<AppContextInterface>(
   {} as AppContextInterface
