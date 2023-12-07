@@ -124,6 +124,7 @@ export const AppContextProvider = ({
       const resp = await fetch("/api/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        mode: "cors",
         body: JSON.stringify(loginData),
       });
 
@@ -138,6 +139,7 @@ export const AppContextProvider = ({
       const resp = await fetch("/api/account/create", {
         headers: { "Content-Type": "application/json" },
         method: "POST",
+        mode: "cors",
         body: JSON.stringify(data),
       });
 
@@ -155,6 +157,7 @@ export const AppContextProvider = ({
       const resp = await fetch("/api/pay", {
         method: "POST",
         credentials: "include",
+        mode: "cors",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,

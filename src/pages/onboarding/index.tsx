@@ -40,7 +40,11 @@ export default function () {
 
     try {
       const resp = await login({ email, password });
-      if (resp?.status === 500 || resp?.status === 501) {
+      if (
+        resp?.status === 500 ||
+        resp?.status === 501 ||
+        resp?.status === 404
+      ) {
         //@fetch response
         setIsLoading(false);
         return toast({ title: resp?.statusText, status: "error" });
