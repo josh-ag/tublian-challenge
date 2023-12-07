@@ -41,7 +41,7 @@ export default function () {
     try {
       const resp = await login({ email, password });
 
-      if (resp?.status === 500 || (resp?.status === 401 && resp.statusText)) {
+      if (resp.statusText && (resp?.status === 500 || resp?.status === 401)) {
         //@reg failed
         setIsLoading(false);
         return toast({ title: resp?.statusText, status: "error" });

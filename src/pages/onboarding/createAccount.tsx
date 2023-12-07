@@ -46,7 +46,7 @@ export default function CreateAccountPage() {
     const resp = await register({ email, password });
     console.log(resp);
 
-    if (resp?.status === 500 || (resp?.status === 401 && resp.statusText)) {
+    if (resp.statusText && (resp?.status === 500 || resp?.status === 401)) {
       //@reg failed
       setIsLoading(false);
       return toast({ title: resp?.statusText, status: "error" });
