@@ -14,6 +14,7 @@ import tickCircle from "../assets/tick-circle.svg";
 import teamProjectImage from "../assets/team_project_card1.svg";
 import personalProjectImage from "../assets/personalProjectImage.svg";
 import recruitingImage from "../assets/recruitingImage.svg";
+const baseUrl = "https://tublian-challenge.onrender.com";
 
 export const AppContext = createContext<AppContextInterface>(
   {} as AppContextInterface
@@ -121,7 +122,7 @@ export const AppContextProvider = ({
   //@login user
   const login = async (loginData: LoginType) => {
     try {
-      const resp = await fetch("/api/login", {
+      const resp = await fetch(`${baseUrl}/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         mode: "cors",
