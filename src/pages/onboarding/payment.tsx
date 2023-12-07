@@ -367,7 +367,7 @@ export const ModalComponent = ({
 
     const resp = await pay(paymentData);
 
-    if (resp.status === 401) {
+    if (resp?.status === 500 || resp?.status === 401 || resp?.status === 501) {
       //@payment failure response
       setIsLoading(false);
       toast({ title: resp?.statusText, status: "error" });
