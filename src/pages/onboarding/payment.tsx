@@ -366,7 +366,10 @@ export const ModalComponent = ({
     };
 
     const resp = await pay(paymentData);
-    if (resp?.status === 500 || (resp?.status === 401 && resp.statusText)) {
+    if (
+      resp.statusText &&
+      (resp?.status === 500 || resp?.status === 401 || resp?.status === 400)
+    ) {
       //@reg failed
       setIsLoading(false);
       return toast({ title: resp?.statusText, status: "error" });
@@ -653,7 +656,7 @@ export const ModalComponent = ({
               <Button
                 //@Submit button
                 variant={isLoading ? "solid" : "unstyled"}
-                colorScheme={isLoading ? "gray" : "none"}
+                _hover={{ bgColor: "brand.800" }}
                 isLoading={isLoading}
                 loadingText={"Processing"}
                 disabled={isLoading ? true : false}

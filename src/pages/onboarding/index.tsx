@@ -41,7 +41,10 @@ export default function () {
     try {
       const resp = await login({ email, password });
 
-      if (resp.statusText && (resp?.status === 500 || resp?.status === 401)) {
+      if (
+        resp.statusText &&
+        (resp?.status === 500 || resp?.status === 401 || resp?.status === 400)
+      ) {
         //@reg failed
         setIsLoading(false);
         return toast({ title: resp?.statusText, status: "error" });
@@ -224,7 +227,6 @@ export default function () {
 
               <Button
                 variant={isLoading ? "solid" : "unstyled"}
-                colorScheme={isLoading ? "gray" : "none"}
                 isLoading={isLoading}
                 loadingText={"Processing"}
                 disabled={isLoading ? true : false}
@@ -235,6 +237,7 @@ export default function () {
                 fontWeight={500}
                 size={"lg"}
                 onClick={handleLogin}
+                _hover={{ bgColor: "brand.800" }}
               >
                 Proceed
               </Button>

@@ -46,7 +46,10 @@ export default function CreateAccountPage() {
     const resp = await register({ email, password });
     console.log(resp);
 
-    if (resp.statusText && (resp?.status === 500 || resp?.status === 401)) {
+    if (
+      resp.statusText &&
+      (resp?.status === 500 || resp?.status === 401 || resp?.status === 400)
+    ) {
       //@reg failed
       setIsLoading(false);
       return toast({ title: resp?.statusText, status: "error" });
@@ -246,7 +249,7 @@ export default function CreateAccountPage() {
               <VStack w="full" spacing={6}>
                 <Button
                   variant={isLoading ? "solid" : "unstyled"}
-                  colorScheme={isLoading ? "gray" : "none"}
+                  _hover={{ bgColor: "brand.800" }}
                   isLoading={isLoading}
                   loadingText={"Processing"}
                   disabled={isLoading ? true : false}
