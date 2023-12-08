@@ -344,7 +344,6 @@ export const ModalComponent = ({
 
   const { pay } = useContext(AppContext);
   const toast = useToast();
-  const navigate = useNavigate();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
