@@ -38,7 +38,7 @@ import {
   Link,
   useToast,
 } from "@chakra-ui/react";
-import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
 import tublianLogo from "../../assets/tublian_logo.svg";
 import { PaymentType, PlanGroupType, PlanType } from "../../type";
 import { IoIosArrowDown } from "react-icons/io";
