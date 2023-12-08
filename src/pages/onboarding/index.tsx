@@ -33,7 +33,7 @@ export default function () {
     if (!email || !password) {
       setIsLoading(false);
       return toast({
-        title: "Email and Last Password is marked required.",
+        title: "Email and Password is marked required.",
         status: "error",
       });
     }
