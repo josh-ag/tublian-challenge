@@ -27,6 +27,9 @@ export default function () {
   const navigate = useNavigate();
   const toast = useToast();
 
+  const isValidEmailAddr =
+    /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
   //@handle login
   const handleLogin = async () => {
     setIsLoading(true);
@@ -36,6 +39,11 @@ export default function () {
         title: "Email and Password is marked required.",
         status: "error",
       });
+    }
+
+    if (email && !isValidEmailAddr.test(email)) {
+      setIsLoading(false);
+      return toast({ title: "Not a valid email address", status: "error" });
     }
 
     try {

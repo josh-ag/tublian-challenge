@@ -37,11 +37,13 @@ import {
   InputRightElement,
   Link,
   useToast,
+  Select,
+  useNumberInput,
 } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
 import tublianLogo from "../../assets/tublian_logo.svg";
 import { PaymentType, PlanGroupType, PlanType } from "../../type";
-import { IoIosArrowDown } from "react-icons/io";
+import { IoMdArrowDropdown } from "react-icons/io";
 import { CheckCircleIcon } from "@chakra-ui/icons";
 import closeBtn from "../../assets/close_button.svg";
 import lockIcon from "../../assets/lock.svg";
@@ -53,6 +55,7 @@ import bgConfetti from "../../assets/confetti.svg";
 import checkMark from "../../assets/check_mark.svg";
 import { useContext, useMemo, useState } from "react";
 import { AppContext } from "../../contexts/appContext";
+import { countryList } from "../../data";
 
 //@create checkable card group
 function PlansComponent({ plans }: { plans: PlanType[] }) {
@@ -347,11 +350,19 @@ export const ModalComponent = ({
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
+  const isValidEmailAddr =
+    /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
   const handlePayment = async () => {
     setIsLoading(true);
     if (!email || !name || !country || !cvv || !number || !date) {
       setIsLoading(false);
       return toast({ title: "Some fields are missing", status: "error" });
+    }
+
+    if (email && !isValidEmailAddr.test(email)) {
+      setIsLoading(false);
+      return toast({ title: "Invalid email address", status: "error" });
     }
 
     const paymentData = {
@@ -388,6 +399,17 @@ export const ModalComponent = ({
     onOpen();
   };
 
+  const handleSetCardExpiry = (_date: string) => {
+    setDate(_date);
+  };
+
+  const handleSetCardNumber = (value: string) => {
+    setNumber(value);
+  };
+  const handleSetCardCvv = (val: string) => {
+    setCvv(val);
+  };
+
   const bgGradient =
     plan?.name === "Pro"
       ? "linear(to-b,#855FEF,#5435AA)"
@@ -401,6 +423,26 @@ export const ModalComponent = ({
       : plan?.name === "Business"
       ? "#79BBFF"
       : "#22BFD6";
+
+  //@get card details
+  const { getInputProps } = useNumberInput({
+    defaultValue: number,
+    onChange: handleSetCardNumber,
+  });
+
+  const { getInputProps: getCvvInputProps } = useNumberInput({
+    defaultValue: cvv,
+    onChange: handleSetCardCvv,
+  });
+
+  const { getInputProps: getDateInputProps } = useNumberInput({
+    defaultValue: date,
+    onChange: handleSetCardExpiry,
+  });
+  //override default input
+  const input = getInputProps();
+  const cvvInput = getCvvInputProps();
+  const dateInput = getDateInputProps();
 
   return (
     <>
@@ -477,7 +519,6 @@ export const ModalComponent = ({
                     <Box
                       as={Button}
                       w={plan?.type === "Pro" ? 69 : 160}
-                      // w={169}
                       h={29}
                       variant={"unstyled"}
                       borderRadius={10}
@@ -559,10 +600,9 @@ export const ModalComponent = ({
                       <Image src={lockIcon} objectFit={"cover"} />
                     </InputLeftElement>
                     <Input
-                      type="holder"
+                      {...input}
                       name="number"
-                      defaultValue={number}
-                      onChange={(e) => setNumber(e.target.value)}
+                      maxLength={16}
                       placeholder="Card Number"
                       variant={"flushed"}
                       fontSize={16}
@@ -584,10 +624,10 @@ export const ModalComponent = ({
                   </InputGroup>
                   <HStack>
                     <Input
+                      {...dateInput}
                       name="date"
-                      defaultValue={date}
-                      onChange={(e) => setDate(e.target.value)}
-                      type="mm/yy"
+                      type="date-year"
+                      maxLength={5}
                       placeholder="MM/YY"
                       variant={"flushed"}
                       fontSize={16}
@@ -599,11 +639,10 @@ export const ModalComponent = ({
                       borderColor={"#888888"}
                     />
                     <Input
-                      type="cvv"
+                      {...cvvInput}
                       name="cvv"
-                      defaultValue={cvv}
-                      onChange={(e) => setCvv(e.target.value)}
                       placeholder="CVV"
+                      maxLength={3}
                       variant={"flushed"}
                       fontSize={16}
                       fontWeight={500}
@@ -615,26 +654,23 @@ export const ModalComponent = ({
                     />
                   </HStack>
 
-                  <InputGroup>
-                    <Input
-                      type="country"
-                      name="country"
-                      defaultValue={country}
-                      onChange={(e) => setCountry(e.target.value)}
-                      placeholder="Country"
-                      variant={"flushed"}
-                      fontSize={16}
-                      fontWeight={500}
-                      py={4}
-                      color={"#888888"}
-                      _focus={{ color: "#CFCFCF" }}
-                      focusBorderColor="#CFCFCF"
-                      borderColor={"#888888"}
-                    />
-                    <InputRightElement>
-                      <IoIosArrowDown />
-                    </InputRightElement>
-                  </InputGroup>
+                  <Select
+                    defaultValue={country}
+                    onChange={(e) => setCountry(e.target.value)}
+                    variant={"flushed"}
+                    icon={<IoMdArrowDropdown />}
+                    placeholder="Country"
+                    color={"#888888"}
+                    _focus={{ color: "#CFCFCF" }}
+                    focusBorderColor="#CFCFCF"
+                    borderColor={"#888888"}
+                  >
+                    {countryList.map((_country: string) => (
+                      <option value={_country} key={_country}>
+                        {_country}
+                      </option>
+                    ))}
+                  </Select>
 
                   <Text fontSize={16} fontWeight={500}>
                     By clicking below, you agree to our{" "}

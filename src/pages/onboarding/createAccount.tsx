@@ -24,13 +24,23 @@ import { AppContext } from "../../contexts/appContext";
 
 // @Onboarding page2
 export default function CreateAccountPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  //check passwd criteria
+  const [isCharLen, setIsCharLen] = useState<boolean>(false);
+  const [isContainSymbol, setIsContainSymbol] = useState<boolean>(false);
+  const [isContainUppercase, setIsContainUppercase] = useState<boolean>(false);
 
   const { register } = useContext(AppContext);
   const navigate = useNavigate();
   const toast = useToast();
+
+  const isValidEmailAddr =
+    /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+  const testForUppercase = /[A-Z]/;
+  const testSymbol = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
 
   const handleRegister = async () => {
     setIsLoading(true);
@@ -40,6 +50,16 @@ export default function CreateAccountPage() {
         title: "Email and Password field is marked required",
         status: "error",
       });
+    }
+
+    if (email && !isValidEmailAddr.test(email)) {
+      setIsLoading(false);
+      return toast({ title: "Not a valid email address", status: "error" });
+    }
+
+    if (!isCharLen || !isContainSymbol || !isContainUppercase) {
+      setIsLoading(false);
+      return toast({ title: "Password must meet criteria" });
     }
 
     //@register user
@@ -67,6 +87,33 @@ export default function CreateAccountPage() {
     setIsLoading(false);
     toast({ title: res.msg, status: "success" });
     return navigate("/");
+  };
+
+  //@handle setting user password
+  const handleSetPasswd = (passwd: string) => {
+    // setPassword(passwd);
+
+    if (testForUppercase.test(passwd)) {
+      setIsContainUppercase(true);
+    } else {
+      setIsContainUppercase(false);
+    }
+    if (testSymbol.test(passwd)) {
+      setIsContainSymbol(true);
+    } else {
+      setIsContainSymbol(false);
+    }
+
+    //test char len
+    ((arg) => {
+      if (arg.length >= 8) {
+        setIsCharLen(true);
+      } else {
+        setIsCharLen(false);
+      }
+    })(passwd);
+
+    setPassword(passwd);
   };
 
   return (
@@ -220,7 +267,7 @@ export default function CreateAccountPage() {
               />
               <Input
                 defaultValue={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => handleSetPasswd(e.target.value)}
                 type="password"
                 placeholder="Password"
                 variant={"flushed"}
@@ -236,13 +283,24 @@ export default function CreateAccountPage() {
                   fontWeight={400}
                   color={"#888"}
                   borderRadius={10}
+                  isChecked={isCharLen}
                 >
                   8 Characters minimum
                 </Checkbox>
-                <Checkbox fontSize={12} fontWeight={400} color={"#888"}>
+                <Checkbox
+                  fontSize={12}
+                  fontWeight={400}
+                  color={"#888"}
+                  isChecked={isContainUppercase}
+                >
                   One Uppercase Character
                 </Checkbox>
-                <Checkbox fontSize={12} fontWeight={400} color={"#888"}>
+                <Checkbox
+                  fontSize={12}
+                  fontWeight={400}
+                  color={"#888"}
+                  isChecked={isContainSymbol}
+                >
                   One symbol character
                 </Checkbox>
               </Stack>
