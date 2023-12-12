@@ -18,6 +18,7 @@ import recruitingImage from "../assets/recruitingImage.svg";
 export const AppContext = createContext<AppContextInterface>(
   {} as AppContextInterface
 );
+const baseUrl = "https://tublian-challenge.onrender.com";
 
 /*
 ==============================================================
@@ -121,7 +122,7 @@ export const AppContextProvider = ({
   //@login user
   const login = async (loginData: LoginType) => {
     try {
-      const resp = await fetch(`/api/login`, {
+      const resp = await fetch(`${baseUrl}/api/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         mode: "cors",
@@ -136,7 +137,7 @@ export const AppContextProvider = ({
 
   const register = async (data: LoginType) => {
     try {
-      const resp = await fetch(`/api/account/create`, {
+      const resp = await fetch(`${baseUrl}/api/account/create`, {
         headers: { "Content-Type": "application/json" },
         method: "POST",
         mode: "cors",
@@ -154,7 +155,7 @@ export const AppContextProvider = ({
     const token = localStorage.getItem("_token");
 
     try {
-      const resp = await fetch("/api/pay", {
+      const resp = await fetch(`${baseUrl}/api/pay`, {
         method: "POST",
         mode: "cors",
         headers: {
