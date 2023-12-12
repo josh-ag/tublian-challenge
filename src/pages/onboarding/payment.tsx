@@ -287,14 +287,8 @@ function PaymentMethod({
     onChange: handleSetCardCvv,
   });
 
-  const { getInputProps: getDateInputProps } = useNumberInput({
-    defaultValue: date,
-    onChange: handleSetCardExpiry,
-  });
-
   const input = getInputProps();
   const cvvInput = getCvvInputProps();
-  const dateInput = getDateInputProps();
 
   const emailPattern =
     /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -498,10 +492,10 @@ function PaymentMethod({
                     </InputGroup>
                     <HStack>
                       <Input
-                        {...dateInput}
+                        value={date}
+                        onChange={(e) => handleSetCardExpiry(e.target.value)}
                         name="date"
-                        type="date-year"
-                        maxLength={4}
+                        maxLength={5}
                         placeholder="MM/YY"
                         variant={"flushed"}
                         fontSize={16}
