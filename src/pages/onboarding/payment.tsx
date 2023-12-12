@@ -42,7 +42,12 @@ import {
 } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
 import tublianLogo from "../../assets/tublian_logo.svg";
-import { PaymentType, PlanGroupType, PlanType } from "../../type";
+import {
+  PaymentDetailType,
+  PaymentType,
+  PlanGroupType,
+  PlanType,
+} from "../../type";
 import { IoMdArrowDropdown } from "react-icons/io";
 import { CheckCircleIcon } from "@chakra-ui/icons";
 import closeBtn from "../../assets/close_button.svg";
@@ -232,21 +237,117 @@ function PlansComponent({ plans }: { plans: PlanType[] }) {
 }
 
 //@Create a button group that act like radio
-function PaymentMethod() {
-  const { paymentMethods } = useContext(AppContext);
+function PaymentMethod({
+  onModalClose,
+  onOpen,
+  plan,
+}: {
+  onModalClose: () => void;
+  onOpen: () => void;
+  plan: PlanType;
+}) {
+  //@state
+  const [email, setEmail] = useState<string>("");
+  const [number, setNumber] = useState<string>("");
+  const [cvv, setCvv] = useState<string>("");
+  const [name, setName] = useState<string>("");
+  const [date, setDate] = useState<string>("");
+  const [country, setCountry] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  // const handleChange = (value: any) => {
-  //   //Do Something
-  //   toast({
-  //     title: `The value got changed to ${value}!`,
-  //     status: "success",
-  //     duration: 2000,
-  //   });
-  // };
+  const toast = useToast();
+  const { paymentMethods, pay } = useContext(AppContext);
+
+  const handleSetCardExpiry = (_date: string) => {
+    // Remove existing slashes and non-numeric characters
+    const newValue = _date.replace(/[^0-9]/g, "");
+
+    // Add a slash after every 2 characters
+    const formattedDate = newValue.replace(/(\d{2})(?=\d)/g, "$1/");
+
+    setDate(formattedDate);
+  };
+
+  const handleSetCardNumber = (value: string) => {
+    setNumber(value);
+  };
+
+  const handleSetCardCvv = (val: string) => {
+    setCvv(val);
+  };
+
+  //@get card details
+  const { getInputProps } = useNumberInput({
+    defaultValue: number,
+    onChange: handleSetCardNumber,
+  });
+
+  const { getInputProps: getCvvInputProps } = useNumberInput({
+    defaultValue: cvv,
+    onChange: handleSetCardCvv,
+  });
+
+  const { getInputProps: getDateInputProps } = useNumberInput({
+    defaultValue: date,
+    onChange: handleSetCardExpiry,
+  });
+
+  const input = getInputProps();
+  const cvvInput = getCvvInputProps();
+  const dateInput = getDateInputProps();
+
+  const emailPattern =
+    /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+  const handlePayment = async () => {
+    setIsLoading(true);
+    if (!email || !name || !country || !cvv || !number || !date) {
+      setIsLoading(false);
+      return toast({ title: "Some fields are missing", status: "error" });
+    }
+
+    if (email && !emailPattern.test(email)) {
+      setIsLoading(false);
+      return toast({ title: "Invalid email address", status: "error" });
+    }
+
+    const paymentData: PaymentDetailType = {
+      email,
+      country,
+      card_number: number,
+      card_cvv: cvv,
+      expiry_date: date,
+      card_name: name,
+      amount: plan?.amount,
+    };
+
+    const resp = await pay(paymentData);
+    console.log("Response: ", resp);
+    if (
+      resp.statusText &&
+      (resp?.status === 500 || resp?.status === 401 || resp?.status === 400)
+    ) {
+      //@reg failed
+      setIsLoading(false);
+      return toast({ title: resp?.statusText, status: "error" });
+    }
+
+    const res = await resp.json();
+
+    if (res.statusCode !== 200) {
+      setIsLoading(false);
+      //@payment failure response
+      return toast({ title: res?.msg, status: "error" });
+    }
+
+    //@next
+    setIsLoading(false);
+    onModalClose();
+    onOpen();
+  };
 
   const { getRadioProps, getRootProps } = useRadioGroup({
     defaultValue: "Card",
-    // onChange: handleChange,
   });
 
   //@create a custom radio button
@@ -309,18 +410,188 @@ function PaymentMethod() {
             Choose how you'd like to pay
           </Text>
         </>
-        <VStack spacing={2} {...getRootProps()}>
-          {paymentMethods.map((paymentMethod: PaymentType) => {
-            return (
-              <CustomRadio
-                key={paymentMethod.name}
-                paymentMethod={paymentMethod}
-                image={paymentMethod.name}
-                {...getRadioProps({ value: paymentMethod.name })}
-              />
-            );
-          })}
-        </VStack>
+
+        <Tabs variant={"flushed"} isFitted={true}>
+          <TabList display={"flex"} flexDirection={"column"} gap={2}>
+            {paymentMethods.map((paymentMethod: PaymentType, index: number) => {
+              return (
+                <Tab key={index} {...getRootProps()}>
+                  <CustomRadio
+                    key={paymentMethod.name}
+                    paymentMethod={paymentMethod}
+                    image={paymentMethod.name}
+                    {...getRadioProps({ value: paymentMethod.name })}
+                  />
+                </Tab>
+              );
+            })}
+          </TabList>
+          <TabPanels>
+            <TabPanel>
+              <VStack spacing={4}>
+                <FormControl w={"full"}>
+                  <VStack
+                    spacing={6}
+                    w={"full"}
+                    justify={"flex-start"}
+                    alignItems={"flex-start"}
+                  >
+                    <Text fontSize={20} fontWeight={700} color={"white"}>
+                      Payment Details
+                    </Text>
+                    <Input
+                      type="email"
+                      name="email"
+                      defaultValue={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="Email"
+                      variant={"flushed"}
+                      fontSize={16}
+                      fontWeight={500}
+                      color={"#888888"}
+                      p={4}
+                      _focus={{ color: "#CFCFCF" }}
+                      focusBorderColor="#CFCFCF"
+                      borderColor={"#888888"}
+                    />
+                    <Input
+                      type="holder"
+                      name="name"
+                      defaultValue={name}
+                      onChange={(e) => setName(e.target.value)}
+                      placeholder="Card Holder"
+                      variant={"flushed"}
+                      fontSize={16}
+                      fontWeight={500}
+                      p={4}
+                      color={"#888888"}
+                      _focus={{ color: "#CFCFCF" }}
+                      focusBorderColor="#CFCFCF"
+                      borderColor={"#888888"}
+                    />
+                    <InputGroup>
+                      <InputLeftElement pointerEvents="none">
+                        <Image src={lockIcon} objectFit={"cover"} />
+                      </InputLeftElement>
+                      <Input
+                        {...input}
+                        name="number"
+                        maxLength={16}
+                        placeholder="Card Number"
+                        variant={"flushed"}
+                        fontSize={16}
+                        fontWeight={500}
+                        py={4}
+                        px={12}
+                        color={"#888888"}
+                        _focus={{ color: "#CFCFCF" }}
+                        focusBorderColor="#CFCFCF"
+                        borderColor={"#888888"}
+                      />
+                      <InputRightElement>
+                        <HStack align={"center"}>
+                          <Image src={logoVisa} objectFit={"cover"} />
+                          <Image src={logoMaster} objectFit={"cover"} />
+                          <Image src={logoAmex} objectFit={"cover"} />
+                        </HStack>
+                      </InputRightElement>
+                    </InputGroup>
+                    <HStack>
+                      <Input
+                        {...dateInput}
+                        name="date"
+                        type="date-year"
+                        maxLength={4}
+                        placeholder="MM/YY"
+                        variant={"flushed"}
+                        fontSize={16}
+                        fontWeight={500}
+                        py={4}
+                        color={"#888888"}
+                        _focus={{ color: "#CFCFCF" }}
+                        focusBorderColor="#CFCFCF"
+                        borderColor={"#888888"}
+                      />
+                      <Input
+                        {...cvvInput}
+                        name="cvv"
+                        placeholder="CVV"
+                        maxLength={3}
+                        variant={"flushed"}
+                        fontSize={16}
+                        fontWeight={500}
+                        py={4}
+                        color={"#888888"}
+                        _focus={{ color: "#CFCFCF" }}
+                        focusBorderColor="#CFCFCF"
+                        borderColor={"#888888"}
+                      />
+                    </HStack>
+
+                    <Select
+                      defaultValue={country}
+                      onChange={(e) => setCountry(e.target.value)}
+                      variant={"flushed"}
+                      icon={<IoMdArrowDropdown />}
+                      placeholder="Country"
+                      color={"#888888"}
+                      _focus={{ color: "#CFCFCF" }}
+                      focusBorderColor="#CFCFCF"
+                      borderColor={"#888888"}
+                    >
+                      {countryList.map((_country: string) => (
+                        <option value={_country} key={_country}>
+                          {_country}
+                        </option>
+                      ))}
+                    </Select>
+
+                    <Text fontSize={16} fontWeight={500}>
+                      By clicking below, you agree to our{" "}
+                      <chakra.label color={"#91C3FD"}>Terms</chakra.label>,
+                      <chakra.label color={"#91C3FD"}>
+                        Privacy Policy
+                      </chakra.label>{" "}
+                      and{" "}
+                      <chakra.label color={"brand.800"}>
+                        Automatic Renewal
+                      </chakra.label>
+                      . Tublian will charge you $49.99 (plus Tax) each month
+                      until you cancel you subscription in account settings.
+                    </Text>
+                  </VStack>
+                </FormControl>
+                <Button
+                  //@Submit button
+                  variant={isLoading ? "solid" : "unstyled"}
+                  _hover={{ bgColor: "brand.800" }}
+                  isLoading={isLoading}
+                  loadingText={"Processing"}
+                  disabled={isLoading ? true : false}
+                  w="100%"
+                  bgColor={"brand.800"}
+                  color={"gray.700"}
+                  rounded={30}
+                  fontWeight={500}
+                  size="lg"
+                  onClick={handlePayment}
+                >
+                  Pay {plan?.amount}
+                </Button>
+              </VStack>
+            </TabPanel>
+            <TabPanel>
+              <Text
+                textAlign={"center"}
+                fontSize={14}
+                fontWeight={500}
+                color={"#FF5ACD"}
+              >
+                Google Pay not yet supported
+              </Text>
+            </TabPanel>
+          </TabPanels>
+        </Tabs>
       </Stack>
     </>
   );
@@ -337,78 +608,9 @@ export const ModalComponent = ({
   onModalOpen: () => void;
   onModalClose: () => void;
 }) => {
-  const [email, setEmail] = useState<string>("");
-  const [number, setNumber] = useState<string>("");
-  const [cvv, setCvv] = useState<string>("");
-  const [name, setName] = useState<string>("");
-  const [date, setDate] = useState<string>("");
-  const [country, setCountry] = useState<string>("");
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-
-  const { pay } = useContext(AppContext);
-  const toast = useToast();
+  // const { pay } = useContext(AppContext);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
-
-  const isValidEmailAddr =
-    /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
-  const handlePayment = async () => {
-    setIsLoading(true);
-    if (!email || !name || !country || !cvv || !number || !date) {
-      setIsLoading(false);
-      return toast({ title: "Some fields are missing", status: "error" });
-    }
-
-    if (email && !isValidEmailAddr.test(email)) {
-      setIsLoading(false);
-      return toast({ title: "Invalid email address", status: "error" });
-    }
-
-    const paymentData = {
-      email,
-      cvv,
-      country,
-      number,
-      expiry_date: date,
-      holder_name: name,
-      amount: plan?.amount,
-    };
-
-    const resp = await pay(paymentData);
-    if (
-      resp.statusText &&
-      (resp?.status === 500 || resp?.status === 401 || resp?.status === 400)
-    ) {
-      //@reg failed
-      setIsLoading(false);
-      return toast({ title: resp?.statusText, status: "error" });
-    }
-
-    const res = await resp.json();
-
-    if (res.statusCode !== 200) {
-      setIsLoading(false);
-      //@payment failure response
-      return toast({ title: res?.msg, status: "error" });
-    }
-
-    //@next
-    setIsLoading(false);
-    onModalClose();
-    onOpen();
-  };
-
-  const handleSetCardExpiry = (_date: string) => {
-    setDate(_date);
-  };
-
-  const handleSetCardNumber = (value: string) => {
-    setNumber(value);
-  };
-  const handleSetCardCvv = (val: string) => {
-    setCvv(val);
-  };
 
   const bgGradient =
     plan?.name === "Pro"
@@ -423,26 +625,6 @@ export const ModalComponent = ({
       : plan?.name === "Business"
       ? "#79BBFF"
       : "#22BFD6";
-
-  //@get card details
-  const { getInputProps } = useNumberInput({
-    defaultValue: number,
-    onChange: handleSetCardNumber,
-  });
-
-  const { getInputProps: getCvvInputProps } = useNumberInput({
-    defaultValue: cvv,
-    onChange: handleSetCardCvv,
-  });
-
-  const { getInputProps: getDateInputProps } = useNumberInput({
-    defaultValue: date,
-    onChange: handleSetCardExpiry,
-  });
-  //override default input
-  const input = getInputProps();
-  const cvvInput = getCvvInputProps();
-  const dateInput = getDateInputProps();
 
   return (
     <>
@@ -553,158 +735,11 @@ export const ModalComponent = ({
                 </CardBody>
               </Card>
 
-              <PaymentMethod />
-
-              <FormControl w={"full"}>
-                <VStack
-                  spacing={6}
-                  w={"full"}
-                  justify={"flex-start"}
-                  alignItems={"flex-start"}
-                >
-                  <Text fontSize={20} fontWeight={700} color={"white"}>
-                    Payment Details
-                  </Text>
-                  <Input
-                    type="email"
-                    name="email"
-                    defaultValue={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Email"
-                    variant={"flushed"}
-                    fontSize={16}
-                    fontWeight={500}
-                    color={"#888888"}
-                    p={4}
-                    _focus={{ color: "#CFCFCF" }}
-                    focusBorderColor="#CFCFCF"
-                    borderColor={"#888888"}
-                  />
-                  <Input
-                    type="holder"
-                    name="name"
-                    defaultValue={name}
-                    onChange={(e) => setName(e.target.value)}
-                    placeholder="Card Holder"
-                    variant={"flushed"}
-                    fontSize={16}
-                    fontWeight={500}
-                    p={4}
-                    color={"#888888"}
-                    _focus={{ color: "#CFCFCF" }}
-                    focusBorderColor="#CFCFCF"
-                    borderColor={"#888888"}
-                  />
-                  <InputGroup>
-                    <InputLeftElement pointerEvents="none">
-                      <Image src={lockIcon} objectFit={"cover"} />
-                    </InputLeftElement>
-                    <Input
-                      {...input}
-                      name="number"
-                      maxLength={16}
-                      placeholder="Card Number"
-                      variant={"flushed"}
-                      fontSize={16}
-                      fontWeight={500}
-                      py={4}
-                      px={12}
-                      color={"#888888"}
-                      _focus={{ color: "#CFCFCF" }}
-                      focusBorderColor="#CFCFCF"
-                      borderColor={"#888888"}
-                    />
-                    <InputRightElement>
-                      <HStack align={"center"}>
-                        <Image src={logoVisa} objectFit={"cover"} />
-                        <Image src={logoMaster} objectFit={"cover"} />
-                        <Image src={logoAmex} objectFit={"cover"} />
-                      </HStack>
-                    </InputRightElement>
-                  </InputGroup>
-                  <HStack>
-                    <Input
-                      {...dateInput}
-                      name="date"
-                      type="date-year"
-                      maxLength={5}
-                      placeholder="MM/YY"
-                      variant={"flushed"}
-                      fontSize={16}
-                      fontWeight={500}
-                      py={4}
-                      color={"#888888"}
-                      _focus={{ color: "#CFCFCF" }}
-                      focusBorderColor="#CFCFCF"
-                      borderColor={"#888888"}
-                    />
-                    <Input
-                      {...cvvInput}
-                      name="cvv"
-                      placeholder="CVV"
-                      maxLength={3}
-                      variant={"flushed"}
-                      fontSize={16}
-                      fontWeight={500}
-                      py={4}
-                      color={"#888888"}
-                      _focus={{ color: "#CFCFCF" }}
-                      focusBorderColor="#CFCFCF"
-                      borderColor={"#888888"}
-                    />
-                  </HStack>
-
-                  <Select
-                    defaultValue={country}
-                    onChange={(e) => setCountry(e.target.value)}
-                    variant={"flushed"}
-                    icon={<IoMdArrowDropdown />}
-                    placeholder="Country"
-                    color={"#888888"}
-                    _focus={{ color: "#CFCFCF" }}
-                    focusBorderColor="#CFCFCF"
-                    borderColor={"#888888"}
-                  >
-                    {countryList.map((_country: string) => (
-                      <option value={_country} key={_country}>
-                        {_country}
-                      </option>
-                    ))}
-                  </Select>
-
-                  <Text fontSize={16} fontWeight={500}>
-                    By clicking below, you agree to our{" "}
-                    <chakra.label color={"#91C3FD"}>Terms</chakra.label>,
-                    <chakra.label color={"#91C3FD"}>
-                      Privacy Policy
-                    </chakra.label>{" "}
-                    and{" "}
-                    <chakra.label color={"brand.800"}>
-                      Automatic Renewal
-                    </chakra.label>
-                    . Tublian will charge you $49.99 (plus Tax) each month until
-                    you cancel you subscription in account settings.
-                  </Text>
-                </VStack>
-              </FormControl>
-
-              <Button
-                //@Submit button
-                variant={isLoading ? "solid" : "unstyled"}
-                _hover={{ bgColor: "brand.800" }}
-                isLoading={isLoading}
-                loadingText={"Processing"}
-                disabled={isLoading ? true : false}
-                w="100%"
-                bgColor={"brand.800"}
-                color={"gray.700"}
-                rounded={30}
-                fontWeight={500}
-                size="lg"
-                onClick={handlePayment}
-              >
-                Pay {plan?.amount}
-              </Button>
+              <PaymentMethod
+                onModalClose={onModalClose}
+                onOpen={onOpen}
+                plan={plan}
+              />
             </VStack>
           </ModalBody>
           <ModalFooter justifyContent={"flex-start"}>

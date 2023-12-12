@@ -5,9 +5,10 @@ export type LoginType = {
 
 export type PaymentDetailType = {
   email: string;
-  cvv: string;
-  number: string;
-  holdder_name: string;
+  card_cvv: string;
+  country: string;
+  card_number: string;
+  card_name: string;
   expiry_date: string;
   amount: string;
 };
@@ -23,7 +24,7 @@ export type PlanType = {
   type: string;
   name: string;
   heading: string;
-  amount?: string;
+  amount: string;
   features: string[];
 };
 

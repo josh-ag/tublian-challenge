@@ -27,7 +27,6 @@ export default function CreateAccountPage() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  //check passwd criteria
   const [isCharLen, setIsCharLen] = useState<boolean>(false);
   const [isContainSymbol, setIsContainSymbol] = useState<boolean>(false);
   const [isContainUppercase, setIsContainUppercase] = useState<boolean>(false);
@@ -36,7 +35,7 @@ export default function CreateAccountPage() {
   const navigate = useNavigate();
   const toast = useToast();
 
-  const isValidEmailAddr =
+  const emailPattern =
     /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
   const testForUppercase = /[A-Z]/;
@@ -52,14 +51,14 @@ export default function CreateAccountPage() {
       });
     }
 
-    if (email && !isValidEmailAddr.test(email)) {
+    if (email && !emailPattern.test(email)) {
       setIsLoading(false);
       return toast({ title: "Not a valid email address", status: "error" });
     }
 
     if (!isCharLen || !isContainSymbol || !isContainUppercase) {
       setIsLoading(false);
-      return toast({ title: "Password must meet criteria" });
+      return toast({ title: "Password must meet criteria", status: "error" });
     }
 
     //@register user

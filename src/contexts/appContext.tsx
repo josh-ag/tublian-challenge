@@ -125,7 +125,7 @@ export const AppContextProvider = ({
       const resp = await fetch(`${baseUrl}/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        mode: "cors",
+        // mode: "cors",
         body: JSON.stringify(loginData),
       });
 
