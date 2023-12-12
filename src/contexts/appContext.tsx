@@ -14,7 +14,6 @@ import tickCircle from "../assets/tick-circle.svg";
 import teamProjectImage from "../assets/team_project_card1.svg";
 import personalProjectImage from "../assets/personalProjectImage.svg";
 import recruitingImage from "../assets/recruitingImage.svg";
-const baseUrl = "https://tublian-challenge.onrender.com/api";
 
 export const AppContext = createContext<AppContextInterface>(
   {} as AppContextInterface
@@ -122,10 +121,10 @@ export const AppContextProvider = ({
   //@login user
   const login = async (loginData: LoginType) => {
     try {
-      const resp = await fetch(`${baseUrl}/login`, {
+      const resp = await fetch(`/api/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        // mode: "cors",
+        mode: "cors",
         body: JSON.stringify(loginData),
       });
 
@@ -137,7 +136,7 @@ export const AppContextProvider = ({
 
   const register = async (data: LoginType) => {
     try {
-      const resp = await fetch(`${baseUrl}/account/create`, {
+      const resp = await fetch(`/api/account/create`, {
         headers: { "Content-Type": "application/json" },
         method: "POST",
         mode: "cors",
@@ -155,9 +154,8 @@ export const AppContextProvider = ({
     const token = localStorage.getItem("_token");
 
     try {
-      const resp = await fetch(`${baseUrl}/pay`, {
+      const resp = await fetch("/api/pay", {
         method: "POST",
-        credentials: "include",
         mode: "cors",
         headers: {
           "Content-Type": "application/json",

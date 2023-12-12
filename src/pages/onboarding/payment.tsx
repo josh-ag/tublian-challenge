@@ -319,7 +319,10 @@ function PaymentMethod({
     console.log("Response: ", resp);
     if (
       resp.statusText &&
-      (resp?.status === 500 || resp?.status === 401 || resp?.status === 400)
+      (resp?.status === 500 ||
+        resp?.status === 401 ||
+        // resp?.status === 400 ||
+        resp?.status === 404)
     ) {
       //@reg failed
       setIsLoading(false);
