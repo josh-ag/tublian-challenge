@@ -122,7 +122,7 @@ export const AppContextProvider = ({
   //@login user
   const login = async (loginData: LoginType) => {
     const abortController = new AbortController();
-    const timeoutId = setTimeout(() => abortController.abort(), 20000);
+    const timeoutId = setTimeout(() => abortController.abort(), 15000);
     //timeout after 20sec.
 
     try {
@@ -144,7 +144,7 @@ export const AppContextProvider = ({
 
   const register = async (data: LoginType) => {
     const abortController = new AbortController();
-    const timeoutId = setTimeout(() => abortController.abort(), 20000);
+    const timeoutId = setTimeout(() => abortController.abort(), 15000);
 
     try {
       const resp = await fetch(`${baseUrl}/api/account/create`, {
@@ -167,7 +167,7 @@ export const AppContextProvider = ({
     //@get auth token
     const token = localStorage.getItem("_token");
     const abortController = new AbortController();
-    const timeoutId = setTimeout(() => abortController.abort(), 20000);
+    const timeoutId = setTimeout(() => abortController.abort(), 15000);
 
     try {
       const resp = await fetch(`${baseUrl}/api/pay`, {
