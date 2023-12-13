@@ -474,8 +474,8 @@ function PaymentMethod({
                         <Image src={lockIcon} objectFit={"cover"} />
                       </InputLeftElement>
                       <Input
-                        disabled={isLoading ? true : false}
                         {...input}
+                        disabled={isLoading ? true : false}
                         name="number"
                         maxLength={16}
                         placeholder="Card Number"
@@ -515,8 +515,8 @@ function PaymentMethod({
                         borderColor={"#888888"}
                       />
                       <Input
-                        disabled={isLoading ? true : false}
                         {...cvvInput}
+                        disabled={isLoading ? true : false}
                         name="cvv"
                         placeholder="CVV"
                         maxLength={3}
