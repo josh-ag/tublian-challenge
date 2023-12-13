@@ -316,21 +316,22 @@ function PaymentMethod({
     };
 
     const resp = await pay(paymentData);
-    console.log("Response: ", resp);
+
     if (
       resp.statusText &&
-      (resp?.status === 500 ||
-        resp?.status === 401 ||
-        // resp?.status === 400 ||
-        resp?.status === 404)
+      (resp?.status === 500 || resp?.status === 401 || resp?.status === 404)
     ) {
       //@reg failed
       setIsLoading(false);
       return toast({ title: resp?.statusText, status: "error" });
     }
 
-    const res = await resp.json();
+    if (resp.status === 401) {
+      setIsLoading(false);
+      return toast({ title: "Unauthorized", status: "error" });
+    }
 
+    const res = await resp.json();
     if (res.statusCode !== 200) {
       setIsLoading(false);
       //@payment failure response
@@ -437,6 +438,7 @@ function PaymentMethod({
                       Payment Details
                     </Text>
                     <Input
+                      disabled={isLoading ? true : false}
                       type="email"
                       name="email"
                       defaultValue={email}
@@ -452,6 +454,7 @@ function PaymentMethod({
                       borderColor={"#888888"}
                     />
                     <Input
+                      disabled={isLoading ? true : false}
                       type="holder"
                       name="name"
                       defaultValue={name}
@@ -471,6 +474,7 @@ function PaymentMethod({
                         <Image src={lockIcon} objectFit={"cover"} />
                       </InputLeftElement>
                       <Input
+                        disabled={isLoading ? true : false}
                         {...input}
                         name="number"
                         maxLength={16}
@@ -495,6 +499,7 @@ function PaymentMethod({
                     </InputGroup>
                     <HStack>
                       <Input
+                        disabled={isLoading ? true : false}
                         value={date}
                         onChange={(e) => handleSetCardExpiry(e.target.value)}
                         name="date"
@@ -510,6 +515,7 @@ function PaymentMethod({
                         borderColor={"#888888"}
                       />
                       <Input
+                        disabled={isLoading ? true : false}
                         {...cvvInput}
                         name="cvv"
                         placeholder="CVV"
@@ -526,6 +532,7 @@ function PaymentMethod({
                     </HStack>
 
                     <Select
+                      disabled={isLoading ? true : false}
                       defaultValue={country}
                       onChange={(e) => setCountry(e.target.value)}
                       variant={"flushed"}

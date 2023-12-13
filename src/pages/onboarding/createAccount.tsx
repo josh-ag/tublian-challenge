@@ -249,6 +249,7 @@ export default function CreateAccountPage() {
               </Text>
 
               <Input
+                disabled={isLoading ? true : false}
                 defaultValue={email}
                 onChange={(e) => setEmail(e.target.value)}
                 type="email"
@@ -262,6 +263,7 @@ export default function CreateAccountPage() {
                 borderColor={"#888888"}
               />
               <Input
+                disabled={isLoading ? true : false}
                 defaultValue={password}
                 onChange={(e) => handleSetPasswd(e.target.value)}
                 type="password"

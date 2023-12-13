@@ -125,7 +125,6 @@ export default function () {
               spacing={{ base: 4, lg: 4, xl: 6, "2xl": 8 }}
               flexWrap={{ base: "wrap", lg: "nowrap" }}
             >
-              {/* @step buttons */}
               <Link
                 as={RouterLink}
                 to="/"
@@ -208,6 +207,7 @@ export default function () {
                 Start recruiting streetcred developers, Today!!
               </Text>
               <Input
+                disabled={isLoading ? true : false}
                 defaultValue={email}
                 onChange={(e) => setEmail(e.target.value)}
                 type="email"
@@ -221,6 +221,7 @@ export default function () {
                 borderColor={"#888888"}
               />
               <Input
+                disabled={isLoading ? true : false}
                 defaultValue={password}
                 onChange={(e) => setPassword(e.target.value)}
                 type="password"
