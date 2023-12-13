@@ -61,28 +61,39 @@ export default function CreateAccountPage() {
       return toast({ title: "Password must meet criteria", status: "error" });
     }
 
-    //@register user
-    const resp = await register({ email, password });
-    console.log(resp);
+    try {
+      //@register user
+      const resp = await register({ email, password });
+      console.log(resp);
 
-    if (resp.statusText && (resp?.status === 500 || resp?.status === 401)) {
-      //@reg failed
+      if (resp.statusText && (resp?.status === 500 || resp?.status === 401)) {
+        //@reg failed
+        setIsLoading(false);
+        return toast({ title: resp?.statusText, status: "error" });
+      }
+
+      const res = await resp.json();
+
+      if (res.statusCode !== 200) {
+        //@reg failed
+        setIsLoading(false);
+        return toast({ title: res.msg, status: "error" });
+      }
+
+      //@registration succeeded
       setIsLoading(false);
-      return toast({ title: resp?.statusText, status: "error" });
+      toast({ title: res.msg, status: "success" });
+      return navigate("/");
+    } catch (err) {
+      if (err instanceof Error) {
+        setIsLoading(false);
+        if (err?.name === "AbortError") {
+          return toast({ title: "Request timeout!", status: "error" });
+        } else {
+          return toast({ title: "Something went wrong", status: "error" });
+        }
+      }
     }
-
-    const res = await resp.json();
-
-    if (res.statusCode !== 200) {
-      //@reg failed
-      setIsLoading(false);
-      return toast({ title: res.msg, status: "error" });
-    }
-
-    //@registration succeeded
-    setIsLoading(false);
-    toast({ title: res.msg, status: "success" });
-    return navigate("/");
   };
 
   //@handle setting user password

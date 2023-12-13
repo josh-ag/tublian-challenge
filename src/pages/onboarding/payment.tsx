@@ -314,34 +314,44 @@ function PaymentMethod({
       card_name: name,
       amount: plan?.amount,
     };
+    try {
+      const resp = await pay(paymentData);
 
-    const resp = await pay(paymentData);
+      if (
+        resp.statusText &&
+        (resp?.status === 500 || resp?.status === 401 || resp?.status === 404)
+      ) {
+        //@reg failed
+        setIsLoading(false);
+        return toast({ title: resp?.statusText, status: "error" });
+      }
 
-    if (
-      resp.statusText &&
-      (resp?.status === 500 || resp?.status === 401 || resp?.status === 404)
-    ) {
-      //@reg failed
+      if (resp.status === 401) {
+        setIsLoading(false);
+        return toast({ title: "Unauthorized", status: "error" });
+      }
+
+      const res = await resp.json();
+      if (res.statusCode !== 200) {
+        setIsLoading(false);
+        //@payment failure response
+        return toast({ title: res?.msg, status: "error" });
+      }
+
+      //@next
       setIsLoading(false);
-      return toast({ title: resp?.statusText, status: "error" });
+      onModalClose();
+      onOpen();
+    } catch (err) {
+      if (err instanceof Error) {
+        setIsLoading(false);
+        if (err?.name === "AbortError") {
+          return toast({ title: "Request timeout!", status: "error" });
+        } else {
+          return toast({ title: "Something went wrong", status: "error" });
+        }
+      }
     }
-
-    if (resp.status === 401) {
-      setIsLoading(false);
-      return toast({ title: "Unauthorized", status: "error" });
-    }
-
-    const res = await resp.json();
-    if (res.statusCode !== 200) {
-      setIsLoading(false);
-      //@payment failure response
-      return toast({ title: res?.msg, status: "error" });
-    }
-
-    //@next
-    setIsLoading(false);
-    onModalClose();
-    onOpen();
   };
 
   const { getRadioProps, getRootProps } = useRadioGroup({

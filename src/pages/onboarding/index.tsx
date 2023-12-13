@@ -73,7 +73,14 @@ export default function () {
       toast({ title: res.msg, status: "success" });
       return navigate("/setup");
     } catch (err) {
-      throw err;
+      if (err instanceof Error) {
+        setIsLoading(false);
+        if (err?.name == "AbortError") {
+          return toast({ title: "Request timeout!", status: "error" });
+        } else {
+          return toast({ title: "Something went wrong", status: "error" });
+        }
+      }
     }
   };
 

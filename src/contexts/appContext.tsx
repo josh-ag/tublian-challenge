@@ -19,7 +19,6 @@ export const AppContext = createContext<AppContextInterface>(
   {} as AppContextInterface
 );
 const baseUrl = "https://tublian-challenge.onrender.com";
-// let baseUrl = "http://localhost:5000";
 
 /*
 ==============================================================
@@ -122,43 +121,59 @@ export const AppContextProvider = ({
 }) => {
   //@login user
   const login = async (loginData: LoginType) => {
+    const abortController = new AbortController();
+    const timeoutId = setTimeout(() => abortController.abort(), 20000);
+    //timeout after 20sec.
+
     try {
       const resp = await fetch(`${baseUrl}/api/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         mode: "cors",
+        signal: abortController.signal,
         body: JSON.stringify(loginData),
       });
 
       return resp;
     } catch (err) {
-      throw err;
+      return err;
+    } finally {
+      clearTimeout(timeoutId);
     }
   };
 
   const register = async (data: LoginType) => {
+    const abortController = new AbortController();
+    const timeoutId = setTimeout(() => abortController.abort(), 20000);
+
     try {
       const resp = await fetch(`${baseUrl}/api/account/create`, {
         headers: { "Content-Type": "application/json" },
         method: "POST",
         mode: "cors",
+        signal: abortController.signal,
         body: JSON.stringify(data),
       });
 
       return resp;
     } catch (err) {
-      throw err;
+      return err;
+    } finally {
+      clearTimeout(timeoutId);
     }
   };
 
   const pay = async (paymentDetail: PaymentDetailType) => {
     //@get auth token
     const token = localStorage.getItem("_token");
+    const abortController = new AbortController();
+    const timeoutId = setTimeout(() => abortController.abort(), 20000);
 
     try {
       const resp = await fetch(`${baseUrl}/api/pay`, {
         method: "POST",
         mode: "cors",
+        signal: abortController.signal,
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -168,7 +183,9 @@ export const AppContextProvider = ({
 
       return resp;
     } catch (err) {
-      throw err;
+      return err;
+    } finally {
+      clearTimeout(timeoutId);
     }
   };
 
