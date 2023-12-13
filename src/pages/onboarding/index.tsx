@@ -75,7 +75,7 @@ export default function () {
     } catch (err) {
       if (err instanceof Error) {
         setIsLoading(false);
-        if (err?.name == "AbortError") {
+        if (err?.name === "AbortError") {
           return toast({ title: "Request timeout!", status: "error" });
         } else {
           return toast({ title: "Something went wrong", status: "error" });

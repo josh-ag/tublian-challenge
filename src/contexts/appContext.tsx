@@ -136,7 +136,7 @@ export const AppContextProvider = ({
 
       return resp;
     } catch (err) {
-      return err;
+      throw err;
     } finally {
       clearTimeout(timeoutId);
     }
@@ -157,7 +157,7 @@ export const AppContextProvider = ({
 
       return resp;
     } catch (err) {
-      return err;
+      throw err;
     } finally {
       clearTimeout(timeoutId);
     }
@@ -183,7 +183,7 @@ export const AppContextProvider = ({
 
       return resp;
     } catch (err) {
-      return err;
+      throw err;
     } finally {
       clearTimeout(timeoutId);
     }
