@@ -21,9 +21,8 @@ import { AppContext } from "../../contexts/appContext";
 export default function () {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const { login } = useContext(AppContext);
+  const { login, isLoading, setIsLoading } = useContext(AppContext);
   const navigate = useNavigate();
   const toast = useToast();
 
@@ -78,7 +77,10 @@ export default function () {
         if (err?.name === "AbortError") {
           return toast({ title: "Request timeout!", status: "error" });
         } else {
-          return toast({ title: "Something went wrong", status: "error" });
+          return toast({
+            title: "Oops!\nSomething went wrong",
+            status: "error",
+          });
         }
       }
     }
@@ -218,6 +220,7 @@ export default function () {
                 defaultValue={email}
                 onChange={(e) => setEmail(e.target.value)}
                 type="email"
+                name="email"
                 placeholder="Email"
                 variant={"flushed"}
                 fontSize={16}
@@ -232,6 +235,7 @@ export default function () {
                 defaultValue={password}
                 onChange={(e) => setPassword(e.target.value)}
                 type="password"
+                name="password"
                 placeholder="Pasword"
                 variant={"flushed"}
                 fontSize={16}

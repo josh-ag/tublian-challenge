@@ -49,4 +49,6 @@ export interface AppContextInterface {
   planGroups: PlanGroupType[];
   paymentMethods: PaymentType[];
   pay: Promise;
+  isLoading: boolean;
+  setIsLoading: (arg: boolean) => void;
 }

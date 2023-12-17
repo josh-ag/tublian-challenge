@@ -253,10 +253,10 @@ function PaymentMethod({
   const [name, setName] = useState<string>("");
   const [date, setDate] = useState<string>("");
   const [country, setCountry] = useState<string>("");
-  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const toast = useToast();
-  const { paymentMethods, pay } = useContext(AppContext);
+  const { paymentMethods, pay, isLoading, setIsLoading } =
+    useContext(AppContext);
 
   const handleSetCardExpiry = (_date: string) => {
     // Remove existing slashes and non-numeric characters
@@ -348,7 +348,10 @@ function PaymentMethod({
         if (err?.name === "AbortError") {
           return toast({ title: "Request timeout!", status: "error" });
         } else {
-          return toast({ title: "Something went wrong", status: "error" });
+          return toast({
+            title: "Oops!\nSomething went wrong",
+            status: "error",
+          });
         }
       }
     }

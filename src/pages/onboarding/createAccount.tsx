@@ -21,17 +21,18 @@ import tublianLogo from "../../assets/tublian_logo.svg";
 import logoGoogle from "../../assets/icon_google.svg";
 import { useContext, useState } from "react";
 import { AppContext } from "../../contexts/appContext";
+const redirectURl = "https://tublian-challenge.onrender.com/api/auth/google";
 
 // @Onboarding page2
 export default function CreateAccountPage() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   const [isCharLen, setIsCharLen] = useState<boolean>(false);
   const [isContainSymbol, setIsContainSymbol] = useState<boolean>(false);
   const [isContainUppercase, setIsContainUppercase] = useState<boolean>(false);
 
-  const { register } = useContext(AppContext);
+  const { register, isLoading, setIsLoading } = useContext(AppContext);
   const navigate = useNavigate();
   const toast = useToast();
 
@@ -85,12 +86,15 @@ export default function CreateAccountPage() {
       toast({ title: res.msg, status: "success" });
       return navigate("/");
     } catch (err) {
+      setIsLoading(false);
       if (err instanceof Error) {
-        setIsLoading(false);
         if (err?.name === "AbortError") {
           return toast({ title: "Request timeout!", status: "error" });
         } else {
-          return toast({ title: "Something went wrong", status: "error" });
+          return toast({
+            title: "Oops!\nSomething went wrong",
+            status: "error",
+          });
         }
       }
     }
@@ -121,6 +125,10 @@ export default function CreateAccountPage() {
     })(passwd);
 
     setPassword(passwd);
+  };
+
+  const handleGoogleSignin = async () => {
+    window.location.href = redirectURl;
   };
 
   return (
@@ -347,6 +355,8 @@ export default function CreateAccountPage() {
                   rounded={30}
                   bgGradient={"linear(to-r, #FBDA61,#FF5ACD 80%)"}
                   sx={{ padding: 0.5 }}
+                  onClick={handleGoogleSignin}
+                  disabled={isLoading ? true : false}
                 >
                   <HStack
                     spacing={4}

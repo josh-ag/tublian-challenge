@@ -1,3 +1,98 @@
+import { PaymentType, UsageType } from "./type";
+import teamProjectImage from "./assets/team_project_card1.svg";
+import personalProjectImage from "./assets/personalProjectImage.svg";
+import recruitingImage from "./assets/recruitingImage.svg";
+import tickCircle from "./assets/tick-circle.svg";
+import cardLogo from "./assets/card.svg";
+import googlePay from "./assets/google_pay.svg";
+
+/*
+==============================================================
+
+                           DATA
+
+===============================================================
+*/
+
+//@Payment Method/Type
+export const paymentMethodsData: PaymentType[] = [
+  {
+    name: "Card",
+    tick: tickCircle,
+    text: "Card Payment",
+    image: cardLogo,
+  },
+  {
+    name: "Google",
+    tick: tickCircle,
+    image: googlePay,
+  },
+];
+
+//users usage option
+export const usageData: UsageType[] = [
+  {
+    name: "team",
+    tick: tickCircle,
+    image: teamProjectImage,
+    heading: "Team Projects",
+    text: "Hire developer for team projects",
+  },
+  {
+    name: "personal",
+    tick: tickCircle,
+    image: personalProjectImage,
+    heading: "Personal Project",
+    text: "Hire developer for personal projects",
+  },
+
+  {
+    name: "recruiting",
+    tick: tickCircle,
+    heading: "Recruiting",
+    image: recruitingImage,
+    text: "Recruit developer for outstanding companies",
+  },
+];
+
+export const planTypesData = [
+  {
+    type: "Pro",
+    name: "Pro",
+    heading: "$19.99/Month",
+    amount: "$19.99",
+    features: [
+      "Advanced search for developer profiles with filters.",
+      "Increased monthly messages to developers.",
+      "Priority support.",
+    ],
+  },
+  {
+    type: "Business Plan",
+    name: "Business",
+    heading: "$49.99/Month",
+    amount: "$49.99",
+    features: [
+      "Premium access to developer profiles and advanced search filters.",
+      "Increased monthly messages to developers.",
+      "Dedicated account manager for personalized support.",
+      "Early access to new features and updates.",
+    ],
+  },
+  {
+    type: "Enterprise Plan",
+    name: "Enterprise",
+    heading: "Cutom Pricing",
+    amount: "Custom Pricing",
+    features: [
+      "Tailored solutions for large enterprises or agencies.",
+      "Full access to all platform features, including custom integrations.",
+      "Unlimited monthly messages to developers.",
+      "Priority support with 24/7 availability.",
+    ],
+  },
+];
+
 export const countryList = [
   "Afghanistan",
   "Åland Islands",

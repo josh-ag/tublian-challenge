@@ -22,6 +22,13 @@ import { AppContext } from "../../contexts/appContext";
 function UsageGroup() {
   const { usages } = useContext(AppContext);
 
+  const urlParams = new URLSearchParams(window.location.search);
+  const authToken = urlParams.get("token");
+
+  if (authToken) {
+    localStorage.setItem("_token", authToken);
+  }
+
   const { getRadioProps, getRootProps } = useRadioGroup({
     defaultValue: "team",
     // onChange: handleChange,
@@ -83,7 +90,7 @@ function UsageGroup() {
                 <Image
                   src={usage.image}
                   objectFit={"cover"}
-                  w={{ base: 55, sm: "60%", md: "60%", lg: "auto" }}
+                  w={{ base: 55, sm: "40%", md: "50%", lg: "auto" }}
                 />
 
                 <VStack align={{ base: "flex-start", lg: "center" }} w="full">
