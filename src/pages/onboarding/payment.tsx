@@ -998,7 +998,7 @@ export default function PaymentPage() {
             </Link>
             <Link
               as={RouterLink}
-              to="/account/create"
+              to="/create"
               fontWeight={500}
               fontSize={14}
               size={"sm"}

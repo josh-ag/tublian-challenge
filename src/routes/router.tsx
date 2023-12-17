@@ -4,7 +4,6 @@ import CreateAccountPage from "../pages/onboarding/createAccount";
 import SetUpPage from "../pages/onboarding/Setup";
 import { ErrorComponent } from "../Components/errorComponent";
 import PaymentPage from "../pages/onboarding/payment";
-// import { GoogleSignin } from "../pages/onboarding/googleSignin";
 
 export const Router = createBrowserRouter([
   {
@@ -13,7 +12,7 @@ export const Router = createBrowserRouter([
     children: [
       { element: <Onboarding />, index: true },
       {
-        path: "account/create",
+        path: "create",
         element: <CreateAccountPage />,
       },
       {
@@ -24,7 +23,6 @@ export const Router = createBrowserRouter([
         path: "payment",
         element: <PaymentPage />,
       },
-      // { path: "auth/google", element: <GoogleSignin /> },
     ],
   },
 ]);

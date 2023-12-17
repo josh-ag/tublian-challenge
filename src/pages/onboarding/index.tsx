@@ -155,7 +155,7 @@ export default function () {
               </Link>
               <Link
                 as={RouterLink}
-                to={"/account/create"}
+                to={"/create"}
                 fontWeight={500}
                 fontSize={14}
                 size={"sm"}
@@ -267,7 +267,7 @@ export default function () {
                 </Text>
                 <Link
                   as={RouterLink}
-                  to="/account/create"
+                  to="/create"
                   fontWeight={700}
                   fontSize={16}
                 >
