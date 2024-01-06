@@ -1,9 +1,13 @@
-import { useNavigate } from "react-router-dom";
+import {
+  isRouteErrorResponse,
+  useNavigate,
+  useRouteError,
+} from "react-router-dom";
 import { Button, HStack, Heading, Stack, Text } from "@chakra-ui/react";
 
 export const ErrorComponent = () => {
   const navigate = useNavigate();
-  // const error = useRouteError();
+  const error = useRouteError();
 
   return (
     <Stack
@@ -24,9 +28,10 @@ export const ErrorComponent = () => {
         </Text>
       </HStack>
 
-      {/* <Text fontSize={14} fontWeight={700} color="white">
-        Err: {error?.statusText || error?.message}
-      </Text> */}
+      <Text fontSize={14} fontWeight={700} color="white">
+        {(isRouteErrorResponse(error) && error?.statusText) ||
+          (error instanceof Error && error?.message)}
+      </Text>
 
       <Button onClick={() => navigate(-1)} variant={"outline"}>
         Take Me Back

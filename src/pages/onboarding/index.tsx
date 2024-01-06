@@ -221,6 +221,7 @@ export default function () {
                 onChange={(e) => setEmail(e.target.value)}
                 type="email"
                 name="email"
+                id="email"
                 placeholder="Email"
                 variant={"flushed"}
                 fontSize={16}
@@ -236,6 +237,7 @@ export default function () {
                 onChange={(e) => setPassword(e.target.value)}
                 type="password"
                 name="password"
+                id="password"
                 placeholder="Pasword"
                 variant={"flushed"}
                 fontSize={16}

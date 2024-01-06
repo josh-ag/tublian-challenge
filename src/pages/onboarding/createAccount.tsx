@@ -273,6 +273,7 @@ export default function CreateAccountPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 type="email"
                 placeholder="Email"
+                id="email"
                 variant={"flushed"}
                 fontSize={16}
                 fontWeight={500}
@@ -286,6 +287,7 @@ export default function CreateAccountPage() {
                 defaultValue={password}
                 onChange={(e) => handleSetPasswd(e.target.value)}
                 type="password"
+                id="password"
                 placeholder="Password"
                 variant={"flushed"}
                 fontSize={16}

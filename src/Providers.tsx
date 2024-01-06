@@ -10,7 +10,7 @@ import { AppContextProvider } from "./contexts/appContext";
 // Extend theme
 const config: ThemeConfig = {
   initialColorMode: "dark",
-  useSystemColorMode: false,
+  useSystemColorMode: true,
 };
 
 const breakpoints = {

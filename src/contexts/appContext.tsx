@@ -11,6 +11,7 @@ import {
   usageData as usages,
   paymentMethodsData as paymentMethods,
 } from "../data";
+
 const baseUrl = "https://tublian-challenge.onrender.com";
 
 export const AppContext = createContext<AppContextInterface>(
